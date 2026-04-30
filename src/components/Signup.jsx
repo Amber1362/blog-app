@@ -10,9 +10,11 @@ function Signup() {
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const [error, setError] = useState('');
-    const {register, handleSubmit} = useForm()
+    const {register, handleSubmit} = useForm();
+    const [isLoading, setIsLoading] = useState(false)
 
     const create = async(data) => {
+        setIsLoading(true)
         setError('')
         try {
             const session = await authService.createAccount(data)
@@ -23,6 +25,8 @@ function Signup() {
             }
         } catch (error) {
             setError(error.message)
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -72,7 +76,7 @@ function Signup() {
                         required: true
                     })}
                     />
-                    <Button type='submit' className='w-full'>Create account</Button>
+                    <Button type='submit' isLoading={isLoading} className='w-full'>Create account</Button>
                 </div>
              </form>
         </div>

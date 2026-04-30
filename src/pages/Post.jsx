@@ -9,7 +9,8 @@ function Post() {
     const [post, setPost] = useState(null)
     const userData = useSelector((state) => state.auth.userData)
     const navigate = useNavigate()
-    const {slug} = useParams()
+    const {slug} = useParams();
+    const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
         appwriteService.getPost(slug).then((post) => {
@@ -24,10 +25,12 @@ function Post() {
     const isAuthor = post && userData ? post.userId === userData.$id : false
 
     const deletePost = () => {
+        setIsLoading(true)
         appwriteService.deletePost(post.$id).then((status) => {
             if(status) {
                 appwriteService.deleteFile(post.featuredImage)
                 navigate('/')
+                setIsLoading(false)
             }
         })
     }
@@ -49,8 +52,8 @@ function Post() {
                                     Edit
                                 </Button>
                             </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
-                                Delete
+                            <Button isLoading={isLoading} bgColor="bg-red-500" onClick={deletePost}>
+                                {isLoading ? 'Loading...' : 'Delete'}
                             </Button>
                         </div>
                     )}

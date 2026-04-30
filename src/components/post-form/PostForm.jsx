@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import { useForm } from 'react-hook-form'
 import {Button, Input, Select, RTE} from '../index'
 import appwriteService from '../../appwrite/config'
@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 function PostForm({post}) {
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate()
     const userData = useSelector((state) => state.auth.userData)
     const {register, handleSubmit, watch, setValue, getValues, control} = useForm({
@@ -18,7 +19,7 @@ function PostForm({post}) {
     })
 
     const submit = async (data) => {
-         console.log('data:', data) 
+        setIsLoading(true)
         if(post) {
         const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
 
@@ -37,9 +38,11 @@ function PostForm({post}) {
         })
 
         if(dbPost) {
+            setIsLoading(false)
             navigate(`/post/${dbPost.$id}`)
         }
     } else {
+        setIsLoading(true)
         const file = await appwriteService.uploadFile(data.image[0])
 
         if(file) {
@@ -48,6 +51,7 @@ function PostForm({post}) {
             const dbPost = await appwriteService.createPost({...data, userId: userData.$id})
 
             if(dbPost) {
+                setIsLoading(false)
             navigate(`/post/${dbPost.$id}`)
         }
         }
@@ -120,8 +124,9 @@ function PostForm({post}) {
                     className="mb-4"
                     {...register("status", { required: true })}
                 />
-                <Button type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {post ? "Update" : "Submit"}
+                <Button isLoading={isLoading} type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
+                    {post ? 'Update' : 'Submit'}
+                    {isLoading ? 'Loading...' : null}
                 </Button>
             </div>
         </form>
