@@ -3,13 +3,19 @@ import appwriteService from '../appwrite/config'
 import {Container, PostCard} from '../components'
 
 function Home() {
-    const [posts, setPosts] = useState([])
+    const [posts, setPosts] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     
     useEffect(() => {
-        appwriteService.getPosts().then((posts) => {
+        setIsLoading(true)
+        appwriteService.getPosts()
+        .then((posts) => {
             if(posts) {
                 setPosts(posts.documents)
             }
+        })
+        .finally(() => {
+            setIsLoading(false)
         })
     }, [])
 

@@ -10,7 +10,7 @@ function Signup() {
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const [error, setError] = useState('');
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit, formState: { errors } } = useForm();
     const [isLoading, setIsLoading] = useState(false)
 
     const create = async(data) => {
@@ -49,33 +49,43 @@ function Signup() {
                 >Sign In
                 </Link>
              </p>
-             {error && <p className='text-red-600 mt-8 text-center'>{error}</p>}
 
              <form onSubmit={handleSubmit(create)}>
                 <div className='space-y-5'>
+
+                  <div className='block'> 
                     <Input
                     label='Full name: '
                     placeholder='Enter your full name'
                     {...register('name', {
-                        required: true
+                        required: true ? 'Enter your name.' : false
                     })}
                     />
+                    {errors.name && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.name.message}</p>}
+                  </div>
 
+                  <div className='block'>
                     <Input
                     label='Email: '
                     placeholder='Enter your email'
                     {...register('email', {
-                        required: true
+                        required: true ? 'Enter your email id.' : false
                     })}
                     />
+                    {errors.email && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.email.message}</p>}
+                  </div>
 
+                  <div className='block'>
                     <Input
                     label='Password: '
                     placeholder='Enter your password'
                     {...register('password', {
-                        required: true
+                        required: true ? 'Enter your password.' : false
                     })}
                     />
+                    {errors.password && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.password.message}</p>}
+                  </div>
+
                     <Button type='submit' isLoading={isLoading} className='w-full'>Create account</Button>
                 </div>
              </form>

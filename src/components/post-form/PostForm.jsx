@@ -10,7 +10,7 @@ function PostForm({post}) {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate()
     const userData = useSelector((state) => state.auth.userData)
-    const {register, handleSubmit, watch, setValue, getValues, control} = useForm({
+    const {register, handleSubmit, watch, setValue, getValues, control, formState: { errors } } = useForm({
         defaultValues: {
             title: post?.title || '',
             slug: post?.slug || '',
@@ -87,31 +87,44 @@ function PostForm({post}) {
 
         <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
             <div className="w-2/3 px-2">
+              <div className='block'>
                 <Input
                     label="Title :"
                     placeholder="Title"
                     className="mb-4"
-                    {...register("title", { required: true })}
+                    {...register("title", { required: 'Title is required.' })}
                 />
+                {errors.title && <p className='text-sm text-red-600 font-bold text-left mb-4'>{errors.title.message}</p>}
+              </div>
+
+              <div className='block'>
                 <Input
                     label="Slug :"
                     placeholder="Slug"
                     className="mb-4"
-                    {...register("slug", { required: true })}
+                    {...register("slug", { required: 'Slug is required.' })}
                     onInput={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
                     }}
                 />
+                {errors.slug && <p className='text-sm text-red-600 font-bold text-left mb-4'>{errors.slug.message}</p>}
+              </div>
+
                 <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
             </div>
+
             <div className="w-1/3 px-2">
+              <div className='block'>
                 <Input
                     label="Featured Image :"
                     type="file"
                     className="mb-4"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
-                    {...register("image", { required: !post })}
+                    {...register("image", { required: !post ? 'Upload the image.' : false })}
                 />
+                {errors.image && <p className='text-sm text-red-600 font-bold text-left mb-4'>{errors.image.message}</p>}
+              </div>
+
                 {post && (
                     <div className="w-full mb-4">
                         <img

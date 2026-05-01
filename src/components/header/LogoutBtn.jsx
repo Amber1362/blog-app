@@ -21,7 +21,7 @@ function LogoutBtn() {
   <>
   {isLoading && 
     <div className='z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center'>
-            
+            <Spinner />
     </div>
   }
 

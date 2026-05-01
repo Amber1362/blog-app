@@ -1,18 +1,32 @@
 import React, {useState, useEffect} from 'react'
 import appwriteService from '../appwrite/config'
 import {Container, PostCard} from '../components'
+import Spinner from '../components/Spinner'
 
 function AllPosts() {
     const [posts, setPosts] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
     
     useEffect(() => {
-        appwriteService.getPosts([]).then((posts) => {
+        setIsLoading(true)
+        appwriteService.getPosts([])
+        .then((posts) => {
             if(posts) {
                 setPosts(posts.documents)
             }
         })
+        .finally(() => {
+            setIsLoading(false)
+        })
     }, [])
   return (
+    <>
+    <div className='relative w-full py-8 h-[400px]'>
+    {isLoading && 
+    <div className='z-50 absolute inset-0 bg-black/30 flex justify-center items-center cursor-not-allowed'>
+        <Spinner />    
+    </div>}
+
     <div className='w-full py-8'>
         <Container>
              <div className='flex flex-wrap'>
@@ -29,6 +43,9 @@ function AllPosts() {
              </div>
         </Container>
     </div>
+    </div>
+
+    </>
   )
 }
 

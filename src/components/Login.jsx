@@ -10,7 +10,7 @@ import Spinner from './Spinner'
 function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit, formState: { errors } } = useForm();
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false)
 
@@ -27,7 +27,7 @@ function Login() {
         } catch (error) {
             setError(error.message)
         } finally {
-            isLoading(false)
+            setIsLoading(false)
         }
     }
   return (
@@ -62,23 +62,29 @@ function Login() {
                <form onSubmit={handleSubmit(login)} className='mt-8'>
                     <div className='space-y-5'>
 
+                      <div className='block'>
                         <Input
                         label='Email: '
                         placeholder='Enter your email'
                         type='email'
                         {...register('email', {
-                            required: true,
+                            required: true ? 'Enter your email id.' : false
                         })}
                         />
+                        {errors.email && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.email.message}</p>}
+                      </div>
 
+                      <div className='block'>
                         <Input
                         label='Password: '
                         placeholder='Enter your password'
                         type='password'
                         {...register('password', {
-                            required: true
+                            required: true ? 'Enter your password' : false
                         })}
                         />
+                        {errors.password && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.password.message}</p>}
+                      </div>
 
                         <Button type='submit' isLoading={isLoading} className='w-full flex justify-center'>Sign in</Button>
                     </div>
