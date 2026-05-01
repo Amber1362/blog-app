@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import authService from './appwrite/auth'
 import { useEffect } from 'react'
 import { login, logout } from './store/authSlice'
-import Footer from './components/footer/footer'
+import Footer from './components/footer/Footer'
 import Header from './components/header/Header'
 import {Outlet} from 'react-router-dom'
 
