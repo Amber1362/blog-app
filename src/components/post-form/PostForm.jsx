@@ -4,6 +4,7 @@ import {Button, Input, Select, RTE} from '../index'
 import appwriteService from '../../appwrite/config'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import Spinner from '../Spinner'
 
 function PostForm({post}) {
     const [isLoading, setIsLoading] = useState(false);
@@ -24,12 +25,7 @@ function PostForm({post}) {
         const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
 
         if(file) {
-            appwriteService.deleteFile(post.featuredImage)
-
-             console.log('sending to Appwrite:', {  // ← add this
-            ...data,
-            userId: userData.$id
-        })
+            appwriteService.deleteFile(post.featuredImage);
         }
 
         const dbPost = await appwriteService.updatePost(post.$id, {
@@ -82,6 +78,13 @@ function PostForm({post}) {
     }, [slugTransform, watch, setValue])
 
     return (
+        <>
+        {isLoading && (
+            <div className="fixed inset-0 z-50 bg-black/30 flex items-center justify-center cursor-not-allowed">
+                <Spinner />
+            </div>
+        )}
+
         <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
             <div className="w-2/3 px-2">
                 <Input
@@ -124,12 +127,17 @@ function PostForm({post}) {
                     className="mb-4"
                     {...register("status", { required: true })}
                 />
-                <Button isLoading={isLoading} type="submit" bgColor={post ? "bg-green-500" : undefined} className="w-full">
-                    {post ? 'Update' : 'Submit'}
-                    {isLoading ? 'Loading...' : null}
+                <Button
+                    isLoading={isLoading}
+                    type="submit"
+                    bgColor={post ? "bg-green-500" : "bg-blue-500"}
+                    className="w-full cursor-pointer hover:bg-blue-600 flex items-center justify-center"
+                >
+                    {post ? "Update" : "Submit"}
                 </Button>
             </div>
         </form>
+        </>
     )
 }
 

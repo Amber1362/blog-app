@@ -1,4 +1,5 @@
 import React from 'react'
+import Spinner from './Spinner'
 
 function Button({
     children,
@@ -13,10 +14,10 @@ function Button({
    <button 
    type={type}
    disabled={isLoading}
-   className={`px-4 py-2 rounded-lg ${bgColor} ${textColor} ${className}`}
+   className={`px-4 py-2 rounded-lg disabled:cursor-not-allowed disabled:opacity-50 ${bgColor} ${textColor} ${className}`}
    {...props}
    >
-    {isLoading ? 'Loading...' : children}
+    {isLoading ? <Spinner /> : children}
    </button>
   )
 }

@@ -29,5 +29,5 @@ export {
     PostForm,
     AuthLayout,
     Login,
-    PostDate
+    PostDate,
 }

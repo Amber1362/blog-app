@@ -5,6 +5,7 @@ import {Button, Input, Logo} from './index'
 import {useForm} from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import authService from '../appwrite/auth'
+import Spinner from './Spinner'
 
 function Login() {
     const navigate = useNavigate();
@@ -30,6 +31,13 @@ function Login() {
         }
     }
   return (
+    <>
+    {isLoading && 
+    <div className='z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center'>
+            
+    </div>
+    }
+
     <div className='flex items-center justify-center w-full'>
         <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
                <div className='mb-2 flex justify-center'>
@@ -72,11 +80,12 @@ function Login() {
                         })}
                         />
 
-                        <Button type='submit' isLoading={isLoading} className='w-full'>Sign in</Button>
+                        <Button type='submit' isLoading={isLoading} className='w-full flex justify-center'>Sign in</Button>
                     </div>
                </form>
         </div> 
     </div>
+    </>
   )
 }
 

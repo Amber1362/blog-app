@@ -53,7 +53,7 @@ function Post() {
                                 </Button>
                             </Link>
                             <Button isLoading={isLoading} bgColor="bg-red-500" onClick={deletePost}>
-                                {isLoading ? 'Loading...' : 'Delete'}
+                                Delete
                             </Button>
                         </div>
                     )}

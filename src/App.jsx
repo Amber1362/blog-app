@@ -9,7 +9,7 @@ import Header from './components/header/Header'
 import {Outlet} from 'react-router-dom'
 
 function App() {
- const [loading, setLoading] = useState(true);
+ const [isLoading, setIsLoading] = useState(true);
  const dispatch = useDispatch();
 
  useEffect(() => {
@@ -25,10 +25,10 @@ function App() {
         dispatch(logout())
       }
      })
-     .finally(() => setLoading(false))
+     .finally(() => setIsLoading(false))
  }, [])
 
-  return !loading ? (
+  return !isLoading ? (
     <div className='min-h-screen flex flex-wrap content-between bg-gray-400 text-black'>
       <div className='w-full block'>
         <Header />
