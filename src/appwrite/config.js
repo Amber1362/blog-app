@@ -30,6 +30,7 @@ export class DatabaseService {
             )
         } catch (error) {
             console.log('Appwrite service :: createPost :: error', error)
+            throw error
         }
     }
 

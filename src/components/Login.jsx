@@ -25,7 +25,11 @@ function Login() {
                 navigate('/')
             }
         } catch (error) {
+           if(error.message.includes('Invalid credentials')) {
+            setError('Create an account first.')
+           } else {
             setError(error.message)
+           }
         } finally {
             setIsLoading(false)
         }
@@ -57,7 +61,7 @@ function Login() {
                     >Sign Up
                     </Link>
                </p>
-               {error && <p className='text-red-600 mt-8 text-center'>{error}</p>}
+               {error && <p className='text-red-600 mt-8 text-center font-bold'>{error}</p>}
 
                <form onSubmit={handleSubmit(login)} className='mt-8'>
                     <div className='space-y-5'>
@@ -68,7 +72,7 @@ function Login() {
                         placeholder='Enter your email'
                         type='email'
                         {...register('email', {
-                            required: true ? 'Enter your email id.' : false
+                            required: 'Enter your email id.'
                         })}
                         />
                         {errors.email && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.email.message}</p>}
@@ -80,13 +84,21 @@ function Login() {
                         placeholder='Enter your password'
                         type='password'
                         {...register('password', {
-                            required: true ? 'Enter your password' : false
+                            required: 'Enter your password',
+                            minLength: {
+                            value: 8,
+                            message: 'Password must be at least 8 characters.'
+                            },
+                            maxLength: {
+                                value: 20,
+                                message: 'Password must be less then 20 characters'
+                            }
                         })}
                         />
                         {errors.password && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.password.message}</p>}
                       </div>
 
-                        <Button type='submit' isLoading={isLoading} className='w-full flex justify-center'>Sign in</Button>
+                        <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer hover:bg-blue-600'>Sign in</Button>
                     </div>
                </form>
         </div> 

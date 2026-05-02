@@ -21,7 +21,7 @@ function AllPosts() {
     }, [])
   return (
     <>
-    <div className='relative w-full py-8 h-[400px]'>
+    <div className='relative w-full py-8'>
     {isLoading && 
     <div className='z-50 absolute inset-0 bg-black/30 flex justify-center items-center cursor-not-allowed'>
         <Spinner />    
@@ -29,7 +29,7 @@ function AllPosts() {
 
     <div className='w-full py-8'>
         <Container>
-             <div className='flex flex-wrap'>
+            <div className='flex flex-wrap'>
                 {posts.map((post) => (
                     <div key={post.$id} className='p-2 w-1/4'>
                         <PostCard
@@ -40,7 +40,7 @@ function AllPosts() {
                         />
                     </div>
                 ))}
-             </div>
+            </div>
         </Container>
     </div>
     </div>

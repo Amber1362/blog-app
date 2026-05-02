@@ -44,7 +44,7 @@ function Signup() {
              <p className='mt-2 text-center text-base text-black/60'>
                 Already have an account?
                 <Link
-                    to='/signup'
+                    to='/login'
                     className='font-medium text-primary transition-all duration-200 hover:underline'
                 >Sign In
                 </Link>
@@ -68,8 +68,9 @@ function Signup() {
                     <Input
                     label='Email: '
                     placeholder='Enter your email'
+                    type='email'
                     {...register('email', {
-                        required: true ? 'Enter your email id.' : false
+                        required: 'Enter your email id.'
                     })}
                     />
                     {errors.email && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.email.message}</p>}
@@ -80,13 +81,21 @@ function Signup() {
                     label='Password: '
                     placeholder='Enter your password'
                     {...register('password', {
-                        required: true ? 'Enter your password.' : false
+                        required: 'Enter your password.',
+                        minLength: {
+                            value: 8,
+                            message: 'Password must be at least 8 characters.'
+                        },
+                        maxLength: {
+                            value: 20,
+                            message: 'Password must be less then 20 characters'
+                        }
                     })}
                     />
                     {errors.password && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.password.message}</p>}
                   </div>
 
-                    <Button type='submit' isLoading={isLoading} className='w-full flex justify-center'>Create account</Button>
+                    <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer hover:bg-blue-600'>Create account</Button>
                 </div>
              </form>
         </div>

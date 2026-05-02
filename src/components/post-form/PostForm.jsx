@@ -8,6 +8,7 @@ import Spinner from '../Spinner'
 
 function PostForm({post}) {
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('')
     const navigate = useNavigate()
     const userData = useSelector((state) => state.auth.userData)
     const {register, handleSubmit, watch, setValue, getValues, control, formState: { errors } } = useForm({
@@ -21,7 +22,8 @@ function PostForm({post}) {
 
     const submit = async (data) => {
         setIsLoading(true)
-        if(post) {
+        try {
+            if(post) {
         const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]) : null
 
         if(file) {
@@ -52,7 +54,18 @@ function PostForm({post}) {
         }
         }
     }
-}
+
+        } catch (error) {
+            if(error.message.includes('already exists')) {
+            setError('This slug is already taken. Please use a different one.')
+        } else {
+            setError(error.message)
+        }
+        } finally {
+            setIsLoading(false)
+        }
+    }
+       
 
     const slugTransform = useCallback((value) => {
         if(value && typeof value === 'string') {
@@ -101,13 +114,14 @@ function PostForm({post}) {
                 <Input
                     label="Slug :"
                     placeholder="Slug"
-                    className="mb-4"
+                    className="mb-2"
                     {...register("slug", { required: 'Slug is required.' })}
                     onInput={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
                     }}
                 />
                 {errors.slug && <p className='text-sm text-red-600 font-bold text-left mb-4'>{errors.slug.message}</p>}
+                {error && <p className='text-red-600 mt-8 text-left mb-4 font-bold text-sm'>{error}</p>}
               </div>
 
                 <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
@@ -153,5 +167,6 @@ function PostForm({post}) {
         </>
     )
 }
+
 
 export default PostForm
