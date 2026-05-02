@@ -86,7 +86,7 @@ function Signup() {
                     {errors.password && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.password.message}</p>}
                   </div>
 
-                    <Button type='submit' isLoading={isLoading} className='w-full'>Create account</Button>
+                    <Button type='submit' isLoading={isLoading} className='w-full flex justify-center'>Create account</Button>
                 </div>
              </form>
         </div>
