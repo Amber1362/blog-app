@@ -4,26 +4,40 @@ import  authService from '../../appwrite/auth'
 import {logout} from '../../store/authSlice'
 import Spinner from '../Spinner';
 import { useNavigate } from 'react-router-dom';
+import {Popup} from '../index'
 
 function LogoutBtn() {
    const dispatch = useDispatch();
+   const [popup, setPopup] = useState(false)
    const [isLoading, setIsLoading] = useState(false)
    const navigate = useNavigate()
 
    const logoutHandler = () => {
-    setIsLoading(true)
-    authService.logout()
-    .then(() => {
-      dispatch(logout())
-      navigate('/')
-    })
-    .finally(() => {
-      setIsLoading(false)
-    })
+    setPopup(true)
    }
 
   return (
   <>
+  {popup && <Popup
+      para='Are you sure you want to logout?'
+      onConfirm={() => {
+        setIsLoading(true)
+        authService.logout()
+        .then(() => {
+          dispatch(logout())
+          navigate('/')
+        })
+        .finally(() => {
+          setIsLoading(false)
+          setPopup(false)
+        })
+      }}
+
+      onCancel={() => {
+        setPopup(false)
+      }}
+  />}
+
   {isLoading && 
     <div className='z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center'>
             <Spinner />

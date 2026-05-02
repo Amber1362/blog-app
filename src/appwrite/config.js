@@ -62,7 +62,7 @@ export class DatabaseService {
             return true
         } catch (error) {
             console.log('Appwrite service :: createPost :: error', error)
-            return false;
+            throw error;
         }
     }
 
@@ -75,7 +75,7 @@ export class DatabaseService {
             )
         } catch (error) {
             console.log('Appwrite service :: createPost :: error', error)
-            return false;
+            throw error;
         }
     }
 
@@ -88,7 +88,7 @@ export class DatabaseService {
             )
         } catch (error) {
             console.log('Appwrite service :: createPost :: error', error)
-            return false
+            throw error
         }
     }
 
@@ -101,7 +101,7 @@ export class DatabaseService {
             )
         } catch (error) {
             console.log('Appwrite service :: createPost :: error', error)
-            return false;
+            throw error;
         }
     }
 
@@ -123,7 +123,6 @@ export class DatabaseService {
             conf.appwriteBucketId,
             fileId
          )
-        console.log('full URL:', result)   // ← this is the actual URL string
     return result
     }
 }

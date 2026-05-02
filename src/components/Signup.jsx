@@ -31,6 +31,12 @@ function Signup() {
     }
 
   return (
+    <>
+    {isLoading && 
+    <div className='z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center'>
+            
+    </div>
+    }
     <div className='flex items-center justify-center '>
         <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
              <div className='mb-2 flex justify-center'>
@@ -100,7 +106,9 @@ function Signup() {
              </form>
         </div>
     </div>
+    </>
   )
+
 }
 
 export default Signup

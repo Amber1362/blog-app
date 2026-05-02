@@ -13,6 +13,7 @@ import Login from "./Login";
 import PostForm from './post-form/PostForm';
 import AuthLayout from './AuthLayout'
 import PostDate from "./Date";
+import Popup from "./Popup";
 
 export {
     Header,
@@ -30,4 +31,5 @@ export {
     AuthLayout,
     Login,
     PostDate,
+    Popup
 }

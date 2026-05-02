@@ -43,9 +43,6 @@ function PostDate({ dateString, className }) {
     })
   }
 
-  // test change
-console.log("date feature test");
-
   return <p className={className}>{text}</p>
 }
 

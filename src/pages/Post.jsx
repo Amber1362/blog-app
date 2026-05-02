@@ -4,6 +4,7 @@ import appwriteService from '../appwrite/config'
 import { Container, Button } from '../components'
 import { useSelector } from 'react-redux'
 import parse from 'html-react-parser'
+import { Popup } from '../components'
 
 function Post() {
     const [post, setPost] = useState(null)
@@ -11,6 +12,7 @@ function Post() {
     const navigate = useNavigate()
     const {slug} = useParams();
     const [isLoading, setIsLoading] = useState(false)
+    const [popup, setPopup] = useState(false)
 
     useEffect(() => {
         appwriteService.getPost(slug).then((post) => {
@@ -25,17 +27,32 @@ function Post() {
     const isAuthor = post && userData ? post.userId === userData.$id : false
 
     const deletePost = () => {
-        setIsLoading(true)
-        appwriteService.deletePost(post.$id).then((status) => {
-            if(status) {
-                appwriteService.deleteFile(post.featuredImage)
-                navigate('/')
-                setIsLoading(false)
-            }
-        })
+        setPopup(true)
     }
   
     return post ? (
+        <>
+        {popup && <Popup
+    para='Are you sure you want to delete the post?'
+    onConfirm={() => {
+        setIsLoading(true)
+        appwriteService.deletePost(post.$id)
+        .then((status) => {
+            if(status) {
+                appwriteService.deleteFile(post.featuredImage)
+                navigate('/')
+                setPopup(false)
+            }
+        })
+        .finally(() => {
+            setIsLoading(false)
+        })
+    }}
+    onCancel={() => {
+        setPopup(false)
+    }}
+    />}
+
         <div className="py-8">
             <Container>
                 <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
@@ -66,6 +83,7 @@ function Post() {
                     </div>
             </Container>
         </div>
+    </>
     ) : null;
 }
 
