@@ -13,10 +13,12 @@ function ForgotPassword() {
     const submit = async (data) => {
         setError('')
         setIsLoading(true)
+        const url = `${import.meta.env.VITE_APP_URL}/reset-password`
+        console.log('URL:', import.meta.env.VITE_APP_URL)
         try {
             await authService.passwordRecovery({
                 email: data.email,
-                url: `${import.meta.env.VITE_APP_URL}/reset-password`
+                url
             })
             setSuccess(true)
         } catch (error) {
