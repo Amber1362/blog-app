@@ -45,6 +45,22 @@ export class AuthService {
             throw error
         }
      }
+
+     async passwordRecovery({email, url}) {
+        try {
+            return await this.account.createRecovery(email, url)
+        } catch (error) {
+            throw error
+        }
+     }
+
+     async updateRecovery({userId, secret, password}) {
+        try {
+            return await this.account.updateRecovery(userId, secret, password) 
+        } catch (error) {
+            throw error
+        }
+     }
 }
 
 const authService = new AuthService();

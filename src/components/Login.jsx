@@ -99,6 +99,9 @@ function Login() {
                             }
                         })}
                         />
+                        <Link to='/forgot-password' className='text-blue-500 hover:underline text-sm block text-left'>
+                            Forgot password?
+                        </Link>
                         {errors.password && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.password.message}</p>}
                       </div>
 

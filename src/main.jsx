@@ -13,6 +13,8 @@ import Signup from './pages/Signup'
 import EditPost from "./pages/EditPost";
 import Post from "./pages/Post";
 import AllPosts from "./pages/AllPosts";
+import ForgotPassword from './pages/ForgotPassword.jsx'
+import ResetPassword from './pages/ResetPassword.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +26,8 @@ const router = createBrowserRouter(
        <Route path='/add-post' element={<AuthLayout authentication={true}><AddPost /></AuthLayout>}/>
        <Route path='/edit-post/:slug' element={<AuthLayout authentication={true}><EditPost /></AuthLayout>}/>
        <Route path='/post/:slug' element={<Post />}/>
+       <Route path='/forgot-password' element={<AuthLayout authentication={false}><ForgotPassword /></AuthLayout>}/>
+       <Route path='/reset-password' element={<AuthLayout authentication={false}><ResetPassword /></AuthLayout>}/>
     </Route>
   )
 )

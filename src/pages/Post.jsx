@@ -33,8 +33,8 @@ function Post() {
     return post ? (
         <>
         {popup && <Popup
-    para='Are you sure you want to delete the post?'
-    onConfirm={() => {
+        para='Are you sure you want to delete the post?'
+        onConfirm={() => {
         setIsLoading(true)
         appwriteService.deletePost(post.$id)
         .then((status) => {
