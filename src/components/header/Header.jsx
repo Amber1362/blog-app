@@ -37,7 +37,7 @@ function Header() {
   ]
 
   return (
-    <header className='py-3 shadow bg-gray-500'>
+    <header className='py-3 shadow bg-white'>
        <Container>
         <nav className='flex'>
           <div className='mr-4'>
@@ -51,8 +51,8 @@ function Header() {
                 <li key={item.name}>
                   <NavLink
                      to={item.slug}
-                     className={({isActive}) => `${isActive ? 'text-white hover:text-black' : 'text-black'} inline-block px-6 py-2 duration-200 cursor-pointer hover:bg-blue-100 rounded-full`}
-                  >{item.name}
+                     className={({isActive}) => `${isActive ? 'text-indigo-600 hover:text-indigo-600' : 'text-black'} inline-block px-6 py-2 duration-200 cursor-pointer hover:bg-blue-100 hover:text-indigo-600 rounded-full`}
+                  ><strong>{item.name}</strong>
                   </NavLink>
                 </li>
               ) : null

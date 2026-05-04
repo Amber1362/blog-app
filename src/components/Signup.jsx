@@ -37,75 +37,78 @@ function Signup() {
             
     </div>
     }
-    <div className='flex items-center justify-center '>
-        <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
-             <div className='mb-2 flex justify-center'>
-                <span className='inline-block w-full max-w-[100px]'>
-                    <Logo width='100%' />
-                </span>
-             </div>
-             <h2 className='text-center text-2x1 font-bold leading-light'>
-                Sign up to create account
-             </h2>
-             <p className='mt-2 text-center text-base text-black/60'>
-                Already have an account?
-                <Link
-                    to='/login'
-                    className='font-medium text-primary transition-all duration-200 hover:underline'
-                >Sign In
-                </Link>
-             </p>
-
-             <form onSubmit={handleSubmit(create)}>
-                <div className='space-y-5'>
-
-                  <div className='block'> 
-                    <Input
-                    label='Full name: '
-                    placeholder='Enter your full name'
-                    {...register('name', {
-                        required: true ? 'Enter your name.' : false
-                    })}
-                    />
-                    {errors.name && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.name.message}</p>}
-                  </div>
-
-                  <div className='block'>
-                    <Input
-                    label='Email: '
-                    placeholder='Enter your email'
-                    type='email'
-                    {...register('email', {
-                        required: 'Enter your email id.'
-                    })}
-                    />
-                    {errors.email && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.email.message}</p>}
-                  </div>
-
-                  <div className='block'>
-                    <Input
-                    label='Password: '
-                    placeholder='Enter your password'
-                    {...register('password', {
-                        required: 'Enter your password.',
-                        minLength: {
-                            value: 8,
-                            message: 'Password must be at least 8 characters.'
-                        },
-                        maxLength: {
-                            value: 20,
-                            message: 'Password must be less then 20 characters'
-                        }
-                    })}
-                    />
-                    {errors.password && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.password.message}</p>}
-                  </div>
-
-                    <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer hover:bg-blue-600'>Create account</Button>
-                </div>
-             </form>
+    <div className='flex items-center justify-center'>
+    <div className='mx-auto w-full max-w-lg bg-white rounded-2xl p-10 shadow-lg border border-gray-100'>
+        <div className='mb-2 flex justify-center'>
+            <span className='inline-block w-full max-w-[100px]'>
+                <Logo width='100%' />
+            </span>
         </div>
+        <h2 className='text-center text-black text-2xl font-bold'>
+            Sign up to create account
+        </h2>
+        <p className='mt-2 text-center text-sm text-gray-500'>
+            Already have an account?&nbsp;
+            <Link
+                to='/login'
+                className='font-medium text-indigo-600 transition-all duration-200 hover:underline'
+            >Sign In
+            </Link>
+        </p>
+
+        <form onSubmit={handleSubmit(create)} className='mt-8'>
+            <div className='space-y-5'>
+
+              <div className='block'> 
+                <Input
+                label='Full name: '
+                placeholder='Enter your full name'
+                className='shadow-sm'
+                {...register('name', {
+                    required: 'Enter your name.'
+                })}
+                />
+                {errors.name && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.name.message}</p>}
+              </div>
+
+              <div className='block'>
+                <Input
+                label='Email: '
+                placeholder='Enter your email'
+                type='email'
+                className='shadow-sm'
+                {...register('email', {
+                    required: 'Enter your email id.'
+                })}
+                />
+                {errors.email && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.email.message}</p>}
+              </div>
+
+              <div className='block'>
+                <Input
+                label='Password: '
+                placeholder='Enter your password'
+                className='shadow-sm'
+                {...register('password', {
+                    required: 'Enter your password.',
+                    minLength: {
+                        value: 8,
+                        message: 'Password must be at least 8 characters.'
+                    },
+                    maxLength: {
+                        value: 20,
+                        message: 'Password must be less then 20 characters'
+                    }
+                })}
+                />
+                {errors.password && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.password.message}</p>}
+              </div>
+
+                <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white'>Create account</Button>
+            </div>
+        </form>
     </div>
+</div>
     </>
   )
 

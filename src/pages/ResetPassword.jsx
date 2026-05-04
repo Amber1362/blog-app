@@ -3,6 +3,7 @@ import { Input, Button, Logo } from '../components'
 import { useForm } from 'react-hook-form'
 import authService from '../appwrite/auth'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import Spinner from '../components/Spinner'
 
 function ResetPassword() {
     const {getValues, register, handleSubmit, formState: { errors } } = useForm()
@@ -33,12 +34,15 @@ function ResetPassword() {
 
     return (
         <>
-        {isLoading && 
-        <div className='z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center'></div>
-        }
+        {/* Loading Overlay */}
+        {isLoading && (
+            <div className='absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex justify-center items-center cursor-not-allowed'>
+                <Spinner />
+            </div>
+        )}
 
-        <div className='flex items-center justify-center w-full'>
-            <div className='mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10'>
+        <div className='flex items-center justify-center w-full my-8'>
+            <div className='mx-auto w-full max-w-lg bg-white rounded-2xl p-10 border border-black/10 shadow-md'>
                 <div className='mb-2 flex justify-center'>
                     <span className='inline-block w-full max-w-[100px]'>
                         <Logo width='100%' />
@@ -61,7 +65,7 @@ function ResetPassword() {
                             label='New password: '
                             placeholder='Enter new password'
                             type='password'
-                            className='mb-4'
+                            className='mb-4 shadow-md'
                             {...register('newPassword', { required: 'Enter new password.' ,
                                 minLength: {
                                 value: 8,
@@ -81,7 +85,7 @@ function ResetPassword() {
                             label='Confirm password: '
                             placeholder='Enter confirm password'
                             type='password'
-                            className='mb-4'
+                            className='mb-4 shadow-md'
                             {...register('confirmPassword', {
                                 required: 'Please confirm your password.',
                                 validate: (value) => value === getValues('newPassword') || 'Passwords do not match.',
@@ -97,7 +101,7 @@ function ResetPassword() {
                             />
                             {errors.confirmPassword && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.confirmPassword.message}</p>}
                         </div>
-                        <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer hover:bg-blue-600'>
+                        <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer hover:bg-indigo-700 shadow-md'>
                             Reset password
                         </Button>
                     </div>

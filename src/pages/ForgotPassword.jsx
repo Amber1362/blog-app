@@ -3,6 +3,7 @@ import { Input, Button, Logo } from '../components'
 import { useForm } from 'react-hook-form'
 import authService from '../appwrite/auth'
 import { Link } from 'react-router-dom'
+import Spinner from '../components/Spinner'
 
 function ForgotPassword() {
     const [error, setError] = useState('')
@@ -30,12 +31,14 @@ function ForgotPassword() {
 
     return (
         <>
-        {isLoading && 
-        <div className='z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center'></div>
-        }
-
+        {/* Loading Overlay */}
+        {isLoading && (
+            <div className='absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex justify-center items-center cursor-not-allowed'>
+                <Spinner />
+            </div>
+        )}
         <div className='m-8'>
-            <div className='mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10'>
+            <div className='mx-auto w-full max-w-lg bg-white shadow-md rounded-xl p-10 border border-black/10'>
                 <div className='mb-2 flex justify-center'>
                     <span className='inline-block w-full max-w-[100px]'>
                         <Logo width='100%' />
@@ -62,12 +65,12 @@ function ForgotPassword() {
                             label='Email: '
                             placeholder='Enter your email'
                             type='email'
-                            className='mb-4'
+                            className='mb-4 shadow-md'
                             {...register('email', { required: 'Email is required.' })}
                             />
                             {errors.email && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.email.message}</p>}
                         </div>
-                        <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer hover:bg-blue-600'>
+                        <Button type='submit' isLoading={isLoading} className='w-full shadow-md flex justify-center cursor-pointer bg-indigo-600 hover:bg-indigo-700'>
                             Send recovery email
                         </Button>
                     </div>

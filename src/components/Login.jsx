@@ -30,7 +30,7 @@ function Login() {
             }
         } catch (error) {
            if(error.message.includes('Invalid credentials')) {
-            setError('Create an account first.')
+            setError('Invalid email or password.')
            } else {
             setError(error.message)
            }
@@ -47,69 +47,71 @@ function Login() {
     }
 
     <div className='flex items-center justify-center w-full'>
-        <div className={`mx-auto w-full max-w-lg bg-gray-100 rounded-xl p-10 border border-black/10`}>
-               <div className='mb-2 flex justify-center'>
-                    <span className='inline-block w-full max-w-[100px]'>
-                        <Logo width='100%' />
-                    </span>
-               </div>
+    <div className='mx-auto w-full max-w-lg bg-white rounded-2xl p-10 shadow-lg border border-gray-100 border-black/10'>
+           <div className='mb-2 flex justify-center'>
+                <span className='inline-block w-full max-w-[100px]'>
+                    <Logo width='100%' />
+                </span>
+           </div>
 
-               <h2 className='text-center text-2x1 font-bold leading-light'>
-                Sign in to your account
-               </h2>
-               <p className='mt-2 text-center text-base text-black/60'>
-                    Doesn't have an account?
-                    <Link
-                        to='/signup'
-                        className='font-medium text-primary transition-all duration-200 hover:underline'
-                    >Sign Up
+           <h2 className='text-center text-black text-2xl font-bold'>
+            Sign in to your account
+           </h2>
+           <p className='mt-2 text-center text-sm text-gray-500'>
+                Doesn't have an account?&nbsp;
+                <Link
+                    to='/signup'
+                    className='font-medium text-indigo-600 transition-all duration-200 hover:underline'
+                >Sign Up
+                </Link>
+           </p>
+           {error && <p className='text-red-500 mt-6 text-center text-sm font-semibold'>{error}</p>}
+
+           <form onSubmit={handleSubmit(login)} className='mt-8'>
+                <div className='space-y-5'>
+
+                  <div className='block'>
+                    <Input
+                    label='Email: '
+                    placeholder='Enter your email'
+                    type='email'
+                    className='shadow-sm'
+                    {...register('email', {
+                        required: 'Enter your email id.'
+                    })}
+                    />
+                    {errors.email && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.email.message}</p>}
+                  </div>
+
+                  <div className='block'>
+                    <Input
+                    label='Password: '
+                    placeholder='Enter your password'
+                    type='password'
+                    className='shadow-sm'
+                    {...register('password', {
+                        required: 'Enter your password',
+                        minLength: {
+                        value: 8,
+                        message: 'Password must be at least 8 characters.'
+                        },
+                        maxLength: {
+                            value: 20,
+                            message: 'Password must be less then 20 characters'
+                        }
+                    })}
+                    />
+                    <Link to='/forgot-password' className='text-indigo-500 hover:underline text-sm block text-left mt-1'>
+                        Forgot password?
                     </Link>
-               </p>
-               {error && <p className='text-red-600 mt-8 text-center font-bold'>{error}</p>}
+                    {errors.password && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.password.message}</p>}
+                  </div>
 
-               <form onSubmit={handleSubmit(login)} className='mt-8'>
-                    <div className='space-y-5'>
-
-                      <div className='block'>
-                        <Input
-                        label='Email: '
-                        placeholder='Enter your email'
-                        type='email'
-                        {...register('email', {
-                            required: 'Enter your email id.'
-                        })}
-                        />
-                        {errors.email && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.email.message}</p>}
-                      </div>
-
-                      <div className='block'>
-                        <Input
-                        label='Password: '
-                        placeholder='Enter your password'
-                        type='password'
-                        {...register('password', {
-                            required: 'Enter your password',
-                            minLength: {
-                            value: 8,
-                            message: 'Password must be at least 8 characters.'
-                            },
-                            maxLength: {
-                                value: 20,
-                                message: 'Password must be less then 20 characters'
-                            }
-                        })}
-                        />
-                        <Link to='/forgot-password' className='text-blue-500 hover:underline text-sm block text-left'>
-                            Forgot password?
-                        </Link>
-                        {errors.password && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.password.message}</p>}
-                      </div>
-
-                        <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer hover:bg-blue-600'>Sign in</Button>
-                    </div>
-               </form>
-        </div> 
-    </div>
+                    <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white'>Sign in</Button>
+                </div>
+           </form>
+    </div> 
+</div>
     </>
   )
 }

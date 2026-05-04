@@ -104,7 +104,7 @@ function PostForm({post}) {
                 <Input
                     label="Title :"
                     placeholder="Title"
-                    className="mb-4"
+                    className="mb-4 shadow-sm"
                     {...register("title", { required: 'Title is required.' })}
                 />
                 {errors.title && <p className='text-sm text-red-600 font-bold text-left mb-4'>{errors.title.message}</p>}
@@ -114,7 +114,7 @@ function PostForm({post}) {
                 <Input
                     label="Slug :"
                     placeholder="Slug"
-                    className="mb-2"
+                    className="mb-2 shadow-sm"
                     {...register("slug", { required: 'Slug is required.' })}
                     onInput={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
@@ -132,7 +132,7 @@ function PostForm({post}) {
                 <Input
                     label="Featured Image :"
                     type="file"
-                    className="mb-4"
+                    className="mb-4 shadow-sm"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
                     {...register("image", { required: !post ? 'Upload the image.' : false })}
                 />
@@ -140,7 +140,7 @@ function PostForm({post}) {
               </div>
 
                 {post && (
-                    <div className="w-full mb-4">
+                    <div className="w-full mb-4 shadow-sm">
                         <img
                             src={appwriteService.getFilePreview(post.featuredImage)}
                             alt={post.title}
@@ -151,14 +151,14 @@ function PostForm({post}) {
                 <Select
                     options={["active", "inactive"]}
                     label="Status"
-                    className="mb-4"
+                    className="mb-4 shadow-sm"
                     {...register("status", { required: true })}
                 />
                 <Button
                     isLoading={isLoading}
                     type="submit"
                     bgColor={post ? "bg-green-500" : "bg-blue-500"}
-                    className="w-full cursor-pointer hover:bg-blue-600 flex items-center justify-center"
+                    className="w-full cursor-pointer hover:bg-indigo-700 flex items-center justify-center bg-indigo-500 shadow-sm"
                 >
                     {post ? "Update" : "Submit"}
                 </Button>

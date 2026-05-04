@@ -4,7 +4,7 @@ import Spinner from './Spinner'
 function Button({
     children,
     type = 'button',
-    bgColor = 'bg-blue-500',
+    bgColor = 'bg-indigo-600',
     textColor = 'text-white',
     className = '',
     isLoading,
