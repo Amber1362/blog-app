@@ -5,6 +5,7 @@ import { Container, Button, Popup, PostDate } from '../components'
 import { useSelector } from 'react-redux'
 import parse from 'html-react-parser'
 import Spinner from '../components/Spinner'
+import toast from 'react-hot-toast'
 
 function Post() {
   const [post, setPost] = useState(null)
@@ -64,8 +65,21 @@ function Post() {
               .then((status) => {
                 if (status) {
                   appwriteService.deleteFile(post.featuredImage)
+                  toast.success('Post deleted successfully!')
                   navigate('/')
                 }
+              })
+              .catch((error) => {
+                if(error.message.includes('Failed to fetch') || 
+               error.message.includes('Network')) {
+                toast.error('Network error. Please check your internet connection.', {
+                  id: 'delete-error'
+                })
+               } else {
+                toast.error('Something went wrong. Please try again.', {
+                    id: 'standard-error'
+                })
+               }
               })
               .finally(() => {
                 setIsLoading(false)

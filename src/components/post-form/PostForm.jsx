@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Spinner from '../Spinner'
 import AiChatBox from '../gemini/AiChatBox'
+import toast from 'react-hot-toast'
 
 function PostForm({post}) {
     const [isLoading, setIsLoading] = useState(false);
@@ -38,6 +39,7 @@ function PostForm({post}) {
         })
 
         if(dbPost) {
+            toast.success('Post updated successfully!')
             setIsLoading(false)
             navigate(`/post/${dbPost.$id}`)
         }
@@ -51,18 +53,26 @@ function PostForm({post}) {
             const dbPost = await appwriteService.createPost({...data, userId: userData.$id})
 
             if(dbPost) {
+                toast.success('Post uploaded successfully!')
                 setIsLoading(false)
-            navigate(`/post/${dbPost.$id}`)
-        }
+                navigate(`/post/${dbPost.$id}`)
+            }
         }
     }
 
         } catch (error) {
             if(error.message.includes('already exists')) {
-            setError('This slug is already taken. Please use a different one.')
-        } else {
-            setError(error.message)
-        }
+            toast.error('This slug is already taken. Please use a different one.')
+        } else if(error.message.includes('Failed to fetch') || 
+               error.message.includes('Network')) {
+                toast.error('Network error. Please check your internet connection.', {
+                  id: 'post-error'
+                })
+               } else{
+                toast.error('Something went wrong. Please try again.', {
+                    id: 'standard-error'
+                })
+               }
         } finally {
             setIsLoading(false)
         }
@@ -101,6 +111,7 @@ function PostForm({post}) {
         )}
 
         <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
+            {error && <p className='text-red-600 mt-8 text-left mb-4 font-bold text-sm'>{error}</p>}
             <div className="w-2/3 px-2">
               <div className='block'>
                 <Input
@@ -123,7 +134,6 @@ function PostForm({post}) {
                     }}
                 />
                 {errors.slug && <p className='text-sm text-red-600 font-bold text-left mb-4'>{errors.slug.message}</p>}
-                {error && <p className='text-red-600 mt-8 text-left mb-4 font-bold text-sm'>{error}</p>}
               </div>
 
                 <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
@@ -148,8 +158,10 @@ function PostForm({post}) {
                     type="file"
                     className="mb-4 shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
+
                     {...register("image", { required: !post ? 'Upload the image.' : false })}
                 />
+
                 {errors.image && <p className='text-sm text-red-600 font-bold text-left mb-4'>{errors.image.message}</p>}
               </div>
 

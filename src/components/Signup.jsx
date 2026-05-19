@@ -5,6 +5,7 @@ import { login } from '../store/authSlice'
 import {Button, Input, Logo} from './index'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 
 function Signup() {
     const navigate = useNavigate()
@@ -19,12 +20,22 @@ function Signup() {
         try {
             const session = await authService.createAccount(data)
             if(session) {
-                // const userData = await authService.getCurrentUser()
-                // if(userData) dispatch(login(userData))
+                toast.success('Account created successfully!')
                 navigate('/login')
             }
         } catch (error) {
-            setError(error.message)
+            if(error.message.includes('Failed to fetch') || 
+               error.message.includes('Network')) {
+                toast.error('Network error. Please check your internet connection.', {
+                    id: 'signup-network-error'
+                })
+               } else if(error.message.includes('already exists')) {
+                    toast.error('Account already exists.')
+               } else {
+                toast.error('Something went wrong. Please try again.', {
+                    id: 'standard-error'
+                })
+               }
         } finally {
             setIsLoading(false)
         }
@@ -98,7 +109,7 @@ function Signup() {
                     },
                     maxLength: {
                         value: 20,
-                        message: 'Password must be less then 20 characters'
+                        message: 'Password must be less than 20 characters'
                     }
                 })}
                 />

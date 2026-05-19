@@ -6,17 +6,16 @@ import {useForm} from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 import authService from '../appwrite/auth'
 import Spinner from './Spinner'
+import toast from 'react-hot-toast'
 
 function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {register, handleSubmit, formState: { errors } } = useForm();
-    const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false)
 
     const login = async(data) => {
         setIsLoading(true)
-        setError('')
         try {
             const session = await authService.login(data)
             if(session) {
@@ -26,13 +25,24 @@ function Login() {
                     name: userData.name,
                     email: userData.email,
                 }))
+                toast.success('Welcome to Vella!')
                 navigate('/')
             }
         } catch (error) {
+            if(error.message.includes('Failed to fetch') || 
+               error.message.includes('Network')) {
+                toast.error('Network error. Please check your internet connection.', {
+                    id: 'login-network-error'
+                })
+               } else 
            if(error.message.includes('Invalid credentials')) {
-            setError('Invalid email or password.')
+            toast.error('Invalid email or password.', {
+                id: 'wrong-email-password'
+            })
            } else {
-            setError(error.message)
+            toast.error('Something went wrong. Please try again.', {
+                id: 'standard-error'
+            })
            }
         } finally {
             setIsLoading(false)
@@ -65,7 +75,7 @@ function Login() {
                 >Sign Up
                 </Link>
            </p>
-           {error && <p className='dark:text-red-400 text-red-500 mt-6 text-center text-sm font-semibold'>{error}</p>}
+           {/* {error && <p className='dark:text-red-400 text-red-500 mt-6 text-center text-sm font-semibold'>{error}</p>} */}
 
            <form onSubmit={handleSubmit(login)} className='mt-8'>
                 <div className='space-y-5'>

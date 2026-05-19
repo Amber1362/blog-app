@@ -11,7 +11,14 @@ function AiChatBox({title, onClose}) {
     useEffect(() => {
         setIsLoading(true)
         aiService.GeminiAi({
-            content: `Write a well-structured blog post based on this title: ${title}. Keep it under 400 words. Be concise and clear.`
+            content: `Write a detailed and engaging blog post based on this title:
+                      ${title}
+                      Requirements:
+                      - Use simple and beginner-friendly language
+                      - Add headings and subheadings
+                      - Include an introduction and conclusion
+                      - Make the content informative and readable
+                      - Write at least 800 words`
         })
         .then((result) => {
             setResponse(result.text)

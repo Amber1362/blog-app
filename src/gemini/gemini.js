@@ -15,7 +15,8 @@ export class AiService {
                 model: 'gemini-2.5-flash',
                 contents: content,
                 config: {
-                    maxOutputTokens: 300
+                    maxOutputTokens: 900,
+                    temperature: 0.7,
                 },
               })
           } catch (error) {

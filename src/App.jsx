@@ -7,6 +7,8 @@ import { login, logout } from './store/authSlice'
 import Footer from './components/footer/Footer'
 import Header from './components/header/Header'
 import {Outlet} from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 function App() {
  const [isLoading, setIsLoading] = useState(true);
@@ -41,9 +43,32 @@ function App() {
      }
  }, [theme])
 
+ useEffect(() => {
+  const handleOffline = () => {
+    toast.error('Internet disconnected', {
+      id: 'network-status'
+    })
+  }
+
+  const handleOnline = () => {
+    toast.success('Back online', {
+      id: 'network-status'
+    })
+  }
+
+  window.addEventListener('offline', handleOffline)
+  window.addEventListener('online', handleOnline)
+
+  return () => {
+    window.removeEventListener("offline", handleOffline)
+    window.removeEventListener("online", handleOnline)
+   }
+ }, [])
+
   return !isLoading ? (
     <div className='min-h-screen flex flex-wrap content-between bg-gray-200 dark:bg-gray-800 dark:border-gray-700 text-black dark:text-white'>
       <div className='w-full block'>
+        <Toaster position='top-right' />
         <Header />
         <main>
           <Outlet />

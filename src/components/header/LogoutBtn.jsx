@@ -5,6 +5,7 @@ import {logout} from '../../store/authSlice'
 import Spinner from '../Spinner';
 import { useNavigate } from 'react-router-dom';
 import {Popup} from '../index'
+import toast from 'react-hot-toast';
 
 function LogoutBtn() {
    const dispatch = useDispatch();
@@ -25,7 +26,20 @@ function LogoutBtn() {
         authService.logout()
         .then(() => {
           dispatch(logout())
+          toast.success('You are logged out.')
           navigate('/')
+        })
+        .catch((error) => {
+          if(error.message.includes('Failed to fetch') || 
+               error.message.includes('Network')) {
+                toast.error('Network error. Please check your internet connection.', {
+                  id: 'logout-error'
+                })
+               } else {
+                toast.error('Something went wrong. Please try again.', {
+                    id: 'standard-error'
+                })
+               }
         })
         .finally(() => {
           setIsLoading(false)
