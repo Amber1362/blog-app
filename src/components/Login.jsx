@@ -47,25 +47,25 @@ function Login() {
     }
 
     <div className='flex items-center justify-center w-full'>
-    <div className='mx-auto w-full max-w-lg bg-white rounded-2xl p-10 shadow-lg border border-gray-100 border-black/10'>
+    <div className='mx-auto w-full max-w-lg bg-white dark:bg-gray-700 dark:border-gray-700 rounded-2xl p-10 shadow-lg border border-gray-100 border-black/10'>
            <div className='mb-2 flex justify-center'>
                 <span className='inline-block w-full max-w-[100px]'>
                     <Logo width='100%' />
                 </span>
            </div>
 
-           <h2 className='text-center text-black text-2xl font-bold'>
+           <h2 className='text-center dark:text-gray-200 text-black text-2xl font-bold'>
             Sign in to your account
            </h2>
-           <p className='mt-2 text-center text-sm text-gray-500'>
+           <p className='mt-2 text-center text-sm text-gray-500 dark:text-gray-400'>
                 Doesn't have an account?&nbsp;
                 <Link
                     to='/signup'
-                    className='font-medium text-indigo-600 transition-all duration-200 hover:underline'
+                    className='font-medium text-indigo-600 dark:text-gray-300 transition-all duration-200 hover:underline'
                 >Sign Up
                 </Link>
            </p>
-           {error && <p className='text-red-500 mt-6 text-center text-sm font-semibold'>{error}</p>}
+           {error && <p className='dark:text-red-400 text-red-500 mt-6 text-center text-sm font-semibold'>{error}</p>}
 
            <form onSubmit={handleSubmit(login)} className='mt-8'>
                 <div className='space-y-5'>
@@ -75,12 +75,12 @@ function Login() {
                     label='Email: '
                     placeholder='Enter your email'
                     type='email'
-                    className='shadow-sm'
+                    className='shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200'
                     {...register('email', {
                         required: 'Enter your email id.'
                     })}
                     />
-                    {errors.email && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.email.message}</p>}
+                    {errors.email && <p className='text-sm dark:text-red-400 text-red-500 text-left mb-4 mt-2'>{errors.email.message}</p>}
                   </div>
 
                   <div className='block'>
@@ -88,7 +88,7 @@ function Login() {
                     label='Password: '
                     placeholder='Enter your password'
                     type='password'
-                    className='shadow-sm'
+                    className='shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200'
                     {...register('password', {
                         required: 'Enter your password',
                         minLength: {
@@ -101,10 +101,10 @@ function Login() {
                         }
                     })}
                     />
-                    <Link to='/forgot-password' className='text-indigo-500 hover:underline text-sm block text-left mt-1'>
+                    <Link to='/forgot-password' className='font-medium text-indigo-500 dark:text-gray-300 hover:underline text-sm block text-left mt-1'>
                         Forgot password?
                     </Link>
-                    {errors.password && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.password.message}</p>}
+                    {errors.password && <p className='text-sm dark:text-red-400 text-red-500 text-left mb-4 mt-2'>{errors.password.message}</p>}
                   </div>
 
                     <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white'>Sign in</Button>

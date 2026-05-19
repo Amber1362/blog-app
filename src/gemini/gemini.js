@@ -3,18 +3,20 @@ import { GoogleGenAI } from "@google/genai";
 
 export class AiService {
     client;
-
     constructor() {
         this.client = new GoogleGenAI({
             apiKey: conf.geminiApiKey
         })
     }
 
-    async GeminiAi({model, content}) {
+    async GeminiAi({content}) {
           try {
               return await this.client.models.generateContent({
-                model,
+                model: 'gemini-2.5-flash',
                 contents: content,
+                config: {
+                    maxOutputTokens: 300
+                },
               })
           } catch (error) {
               throw error

@@ -15,10 +15,13 @@ import Post from "./pages/Post";
 import AllPosts from "./pages/AllPosts";
 import ForgotPassword from './pages/ForgotPassword.jsx'
 import ResetPassword from './pages/ResetPassword.jsx'
+import {PrivacyPolicy, TermsAndConditions} from './components/index.js'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
+       <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+       <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
        <Route index element={<Home />}/>
        <Route path='/login' element={<AuthLayout authentication={false}><Login /></AuthLayout>}/>
        <Route path='/signup' element={<AuthLayout authentication={false}><Signup /></AuthLayout>}/>
@@ -33,9 +36,9 @@ const router = createBrowserRouter(
 )
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <RouterProvider router={router} />
     </Provider>
-  </StrictMode>,
+  // </StrictMode>,
 )

@@ -5,10 +5,12 @@ import appwriteService from '../../appwrite/config'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Spinner from '../Spinner'
+import AiChatBox from '../gemini/AiChatBox'
 
 function PostForm({post}) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('')
+    const [showAi, setShowAi] = useState(false);
     const navigate = useNavigate()
     const userData = useSelector((state) => state.auth.userData)
     const {register, handleSubmit, watch, setValue, getValues, control, formState: { errors } } = useForm({
@@ -104,7 +106,7 @@ function PostForm({post}) {
                 <Input
                     label="Title :"
                     placeholder="Title"
-                    className="mb-4 shadow-sm"
+                    className="mb-4 shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300"
                     {...register("title", { required: 'Title is required.' })}
                 />
                 {errors.title && <p className='text-sm text-red-600 font-bold text-left mb-4'>{errors.title.message}</p>}
@@ -114,7 +116,7 @@ function PostForm({post}) {
                 <Input
                     label="Slug :"
                     placeholder="Slug"
-                    className="mb-2 shadow-sm"
+                    className="mb-2 shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300"
                     {...register("slug", { required: 'Slug is required.' })}
                     onInput={(e) => {
                         setValue("slug", slugTransform(e.currentTarget.value), { shouldValidate: true });
@@ -128,11 +130,23 @@ function PostForm({post}) {
             </div>
 
             <div className="w-1/3 px-2">
+              <div>
+                <Button
+                    type='button'
+                    className="mb-4 w-full cursor-pointer hover:bg-indigo-700 flex items-center justify-center bg-indigo-500 shadow-sm"
+                    onClick={() => setShowAi(true)}
+                >
+                    Generate with AI
+                </Button>
+              </div>
+
+              {showAi && <AiChatBox title={getValues('title')} onClose={() => setShowAi(false)}/>}
+              
               <div className='block'>
                 <Input
                     label="Featured Image :"
                     type="file"
-                    className="mb-4 shadow-sm"
+                    className="mb-4 shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300"
                     accept="image/png, image/jpg, image/jpeg, image/gif"
                     {...register("image", { required: !post ? 'Upload the image.' : false })}
                 />
@@ -151,14 +165,14 @@ function PostForm({post}) {
                 <Select
                     options={["active", "inactive"]}
                     label="Status"
-                    className="mb-4 shadow-sm"
+                    className="mb-4 shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300"
                     {...register("status", { required: true })}
                 />
                 <Button
                     isLoading={isLoading}
                     type="submit"
                     bgColor={post ? "bg-green-500" : "bg-blue-500"}
-                    className="w-full cursor-pointer hover:bg-indigo-700 flex items-center justify-center bg-indigo-500 shadow-sm"
+                    className="w-full cursor-pointer hover:bg-indigo-700 flex items-center justify-center bg-indigo-600 shadow-sm"
                 >
                     {post ? "Update" : "Submit"}
                 </Button>

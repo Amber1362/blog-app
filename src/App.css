@@ -1,4 +1,9 @@
 @import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
+
+.dark .tox-tinymce {
+    border-color: #4B5563 !important;
+}
 
 /* .counter {
   font-size: 16px;

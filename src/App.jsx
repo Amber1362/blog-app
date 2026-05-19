@@ -11,6 +11,7 @@ import {Outlet} from 'react-router-dom'
 function App() {
  const [isLoading, setIsLoading] = useState(true);
  const dispatch = useDispatch();
+ const theme = useSelector((state) => state.theme.mode)
 
  useEffect(() => {
      authService.getCurrentUser()
@@ -28,8 +29,20 @@ function App() {
      .finally(() => setIsLoading(false))
  }, [])
 
+ useEffect(() => {
+     const root = document.body;
+
+     if(theme === 'dark') {
+      root.classList.remove('light')
+      root.classList.add('dark')
+     } else {
+      root.classList.remove('dark')
+      root.classList.add('light')
+     }
+ }, [theme])
+
   return !isLoading ? (
-    <div className='min-h-screen flex flex-wrap content-between bg-gray-200 text-black'>
+    <div className='min-h-screen flex flex-wrap content-between bg-gray-200 dark:bg-gray-800 dark:border-gray-700 text-black dark:text-white'>
       <div className='w-full block'>
         <Header />
         <main>

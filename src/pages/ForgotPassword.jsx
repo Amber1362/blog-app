@@ -38,24 +38,24 @@ function ForgotPassword() {
             </div>
         )}
         <div className='m-8'>
-            <div className='mx-auto w-full max-w-lg bg-white shadow-md rounded-xl p-10 border border-black/10'>
+            <div className='mx-auto w-full max-w-lg bg-white dark:bg-gray-700 dark:border-gray-700 shadow-md rounded-xl p-10 border border-black/10'>
                 <div className='mb-2 flex justify-center'>
                     <span className='inline-block w-full max-w-[100px]'>
                         <Logo width='100%' />
                     </span>
                 </div>
 
-                <h2 className='text-center text-2xl font-bold leading-tight'>
+                <h2 className='text-center text-2xl font-bold dark:text-gray-200 leading-tight'>
                     Forgot your password?
                 </h2>
-                <p className='mt-2 text-center text-base text-black/60'>
+                <p className='mt-2 text-center text-base dark:text-gray-400 text-black/60'>
                     Remember your password?&nbsp;
-                    <Link to='/login' className='font-medium text-primary transition-all duration-200 hover:underline'>
+                    <Link to='/login' className='font-medium dark:text-gray-300 text-primary transition-all duration-200 hover:underline'>
                         Sign in
                     </Link>
                 </p>
 
-                {error && <p className='text-red-600 mt-8 text-center font-bold'>{error}</p>}
+                {error && <p className='dark:text-red-400 text-red-600 mt-8 text-center font-bold'>{error}</p>}
                 {success && <p className='text-green-600 mt-8 text-center font-bold'>Check your inbox for the recovery email.</p>}
 
                 <form onSubmit={handleSubmit(submit)} className='mt-8'>
@@ -65,10 +65,10 @@ function ForgotPassword() {
                             label='Email: '
                             placeholder='Enter your email'
                             type='email'
-                            className='mb-4 shadow-md'
+                            className='mb-4 shadow-md dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200'
                             {...register('email', { required: 'Email is required.' })}
                             />
-                            {errors.email && <p className='text-sm text-red-600 font-bold text-left mb-4 mt-2'>{errors.email.message}</p>}
+                            {errors.email && <p className='text-sm dark:text-red-400 text-red-600 font-bold text-left mb-4 mt-2'>{errors.email.message}</p>}
                         </div>
                         <Button type='submit' isLoading={isLoading} className='w-full shadow-md flex justify-center cursor-pointer bg-indigo-600 hover:bg-indigo-700'>
                             Send recovery email

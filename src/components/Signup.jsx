@@ -33,25 +33,26 @@ function Signup() {
   return (
     <>
     {isLoading && 
-    <div className='z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center'>
+    <div className='z-50  cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center'>
             
     </div>
     }
+    
     <div className='flex items-center justify-center'>
-    <div className='mx-auto w-full max-w-lg bg-white rounded-2xl p-10 shadow-lg border border-gray-100'>
+    <div className='mx-auto w-full max-w-lg bg-white dark:bg-gray-700 dark:border-gray-700 rounded-2xl p-10 shadow-lg border border-gray-100'>
         <div className='mb-2 flex justify-center'>
             <span className='inline-block w-full max-w-[100px]'>
                 <Logo width='100%' />
             </span>
         </div>
-        <h2 className='text-center text-black text-2xl font-bold'>
+        <h2 className='text-center text-black dark:text-gray-200 text-2xl font-bold'>
             Sign up to create account
         </h2>
-        <p className='mt-2 text-center text-sm text-gray-500'>
+        <p className='mt-2 text-center text-sm text-gray-500 dark:text-gray-400'>
             Already have an account?&nbsp;
             <Link
                 to='/login'
-                className='font-medium text-indigo-600 transition-all duration-200 hover:underline'
+                className='font-medium text-indigo-600 dark:text-gray-300 transition-all duration-200 hover:underline'
             >Sign In
             </Link>
         </p>
@@ -63,12 +64,12 @@ function Signup() {
                 <Input
                 label='Full name: '
                 placeholder='Enter your full name'
-                className='shadow-sm'
+                className='shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200'
                 {...register('name', {
                     required: 'Enter your name.'
                 })}
                 />
-                {errors.name && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.name.message}</p>}
+                {errors.name && <p className='text-sm dark:text-red-400 text-red-500 text-left mb-4 mt-2'>{errors.name.message}</p>}
               </div>
 
               <div className='block'>
@@ -76,19 +77,19 @@ function Signup() {
                 label='Email: '
                 placeholder='Enter your email'
                 type='email'
-                className='shadow-sm'
+                className='shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200'
                 {...register('email', {
                     required: 'Enter your email id.'
                 })}
                 />
-                {errors.email && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.email.message}</p>}
+                {errors.email && <p className='text-sm dark:text-red-400 text-red-500 text-left mb-4 mt-2'>{errors.email.message}</p>}
               </div>
 
               <div className='block'>
                 <Input
                 label='Password: '
                 placeholder='Enter your password'
-                className='shadow-sm'
+                className='shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200'
                 {...register('password', {
                     required: 'Enter your password.',
                     minLength: {
@@ -101,7 +102,7 @@ function Signup() {
                     }
                 })}
                 />
-                {errors.password && <p className='text-sm text-red-500 text-left mb-4 mt-2'>{errors.password.message}</p>}
+                {errors.password && <p className='text-sm dark:text-red-400 text-red-500 text-left mb-4 mt-2'>{errors.password.message}</p>}
               </div>
 
                 <Button type='submit' isLoading={isLoading} className='w-full flex justify-center cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white'>Create account</Button>

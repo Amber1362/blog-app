@@ -1,5 +1,6 @@
 import conf from '../conf/conf'
 import { Client, ID, Databases, Storage, Query } from 'appwrite'
+import { AuthService } from './auth';
 
 export class DatabaseService {
     client = new Client()
@@ -79,12 +80,12 @@ export class DatabaseService {
         }
     }
 
-    async getPosts(queries = [Query.equal('status', 'active')]) {
+    async getPosts(queries = []) {
         try {
             return await this.database.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                queries,
+                [Query.equal('status', 'active'), ...queries],
             )
         } catch (error) {
             console.log('Appwrite service :: createPost :: error', error)

@@ -44,7 +44,7 @@ function Post() {
   }
 
   return (
-    <div className='relative w-full min-h-screen bg-gray-200 py-10'>
+    <div className='relative w-full min-h-screen bg-gray-200 dark:bg-gray-800 py-10'>
 
       {/* Loading Overlay */}
       {spinner && (
@@ -82,7 +82,7 @@ function Post() {
         <Container>
 
           {/* Featured Image */}
-          <div className='relative bg-white rounded-2xl shadow-md p-4 mb-6'>
+          <div className='relative bg-white dark:bg-gray-600 dark:border-gray-600 rounded-2xl shadow-md p-4 mb-6'>
 
             <img
               src={appwriteService.getFilePreview(post.featuredImage)}
@@ -118,19 +118,19 @@ function Post() {
 
           {/* Title + Date */}
           <div className='mb-6'>
-            <h1 className='text-3xl font-bold text-gray-800 mb-2'>
+            <h1 className='text-3xl font-bold dark:text-gray-200 text-gray-800 mb-2'>
               {post.title}
             </h1>
 
             <PostDate
-              className='text-sm text-gray-500 font-medium'
+              className='text-sm text-gray-500 dark:text-gray-400 font-medium'
               dateString={post.$createdAt}
             />
           </div>
 
           {/* Content */}
-          <div className='bg-white rounded-2xl shadow-md p-8'>
-            <div className='browser-css text-gray-700 leading-8'>
+          <div className='bg-white dark:bg-gray-600 dark:border-gray-600 rounded-2xl shadow-md p-8'>
+            <div className='browser-css text-gray-700 dark:text-gray-200 leading-8'>
               {parse(post.content)}
             </div>
           </div>

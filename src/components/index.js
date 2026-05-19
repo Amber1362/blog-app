@@ -14,6 +14,8 @@ import PostForm from './post-form/PostForm';
 import AuthLayout from './AuthLayout'
 import PostDate from "./Date";
 import Popup from "./Popup";
+import PrivacyPolicy from "./footer/PrivacyPolicy";
+import TermsAndConditions from "./footer/TermsAndConditions";
 
 export {
     Header,
@@ -31,5 +33,7 @@ export {
     AuthLayout,
     Login,
     PostDate,
-    Popup
+    Popup,
+    PrivacyPolicy,
+    TermsAndConditions
 }
