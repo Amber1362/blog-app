@@ -20,7 +20,7 @@ function App() {
      .then((userData) => {
       if(userData) {
         dispatch(login({userData: {
-           $id: userData.$id,
+                $id: userData.$id,
                 name: userData.name,
                 email: userData.email,
         }}))

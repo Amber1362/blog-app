@@ -23,9 +23,11 @@ function Login() {
             if(session) {
                 const userData = await authService.getCurrentUser()
                 if(userData) dispatch(authLogin({
-                    $id: userData.$id,
+                    userData: {
+                        $id: userData.$id,
                     name: userData.name,
                     email: userData.email,
+                    }
                 }))
                 toast.success('Welcome to Vella!')
                 navigate('/')
