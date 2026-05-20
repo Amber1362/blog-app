@@ -6,13 +6,15 @@ import {Button, Input, Logo} from './index'
 import { useDispatch } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 function Signup() {
     const navigate = useNavigate()
     const dispatch = useDispatch();
     const [error, setError] = useState('');
     const {register, handleSubmit, formState: { errors } } = useForm();
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false)
 
     const create = async(data) => {
         setIsLoading(true)
@@ -97,8 +99,10 @@ function Signup() {
               </div>
 
               <div className='block'>
+                <div className='relative'>
                 <Input
                 label='Password: '
+                type={showPassword ? 'text' : 'password'}
                 placeholder='Enter your password'
                 className='shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200'
                 {...register('password', {
@@ -113,6 +117,16 @@ function Signup() {
                     }
                 })}
                 />
+                <Button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    bgColor='bg-transparent'
+                    textColor='text-indigo-500 dark:text-gray-300 dark:hover:text-gray-400'
+                    className='absolute right-3 top-9 text-sm hover:text-indigo-700'
+                >
+                {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                </Button>
+                </div>
                 {errors.password && <p className='text-sm dark:text-red-400 text-red-500 text-left mb-4 mt-2'>{errors.password.message}</p>}
               </div>
 

@@ -107,7 +107,14 @@ function Post() {
             {isAuthor && (
               <div className='absolute top-8 right-8 flex gap-3'>
 
-                <Link to={`/edit-post/${post.$id}`}>
+                <Link to={`/edit-post/${post.$id}`}
+                onClick={(e) => {
+                  if(!navigator.onLine) {
+                    e.preventDefault()
+                    toast.error('Network error. Please check your internet connection.')
+                  }
+                }}
+                >
                   <Button
                     bgColor='bg-green-500'
                     className='hover:bg-green-600 cursor-pointer'

@@ -7,12 +7,14 @@ import { useDispatch } from 'react-redux'
 import authService from '../appwrite/auth'
 import Spinner from './Spinner'
 import toast from 'react-hot-toast'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
 function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const {register, handleSubmit, formState: { errors } } = useForm();
     const [isLoading, setIsLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
 
     const login = async(data) => {
         setIsLoading(true)
@@ -94,10 +96,11 @@ function Login() {
                   </div>
 
                   <div className='block'>
+                    <div className='relative'>
                     <Input
                     label='Password: '
                     placeholder='Enter your password'
-                    type='password'
+                    type={showPassword ? 'text' : 'password'}
                     className='shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200'
                     {...register('password', {
                         required: 'Enter your password',
@@ -111,6 +114,17 @@ function Login() {
                         }
                     })}
                     />
+                    <Button
+                      type='button'
+                      onClick={() => setShowPassword(!showPassword)}
+                      bgColor='bg-transparent'
+                      textColor='text-indigo-500 dark:text-gray-300 dark:hover:text-gray-400'
+                      className='absolute right-3 top-9 text-sm hover:text-indigo-700'
+                    >
+                    {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+                    </Button>
+                    </div>
+
                     <Link to='/forgot-password' className='font-medium text-indigo-500 dark:text-gray-300 hover:underline text-sm block text-left mt-1'>
                         Forgot password?
                     </Link>
