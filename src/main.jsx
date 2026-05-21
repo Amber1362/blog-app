@@ -17,6 +17,7 @@ import ForgotPassword from './pages/ForgotPassword.jsx'
 import ResetPassword from './pages/ResetPassword.jsx'
 import {PrivacyPolicy, TermsAndConditions} from './components/index.js'
 import Profile from './pages/Profile.jsx'
+import ProfileSetup from './pages/ProfileSetup.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
        <Route path='/forgot-password' element={<AuthLayout authentication={false}><ForgotPassword /></AuthLayout>}/>
        <Route path='/reset-password' element={<AuthLayout authentication={false}><ResetPassword /></AuthLayout>}/>
        <Route path='/profile/:name' element={<AuthLayout authentication={true}><Profile /></AuthLayout>}/>
+       <Route path='/profile-setup' element={<AuthLayout authentication={true}><ProfileSetup /></AuthLayout>}/>
 
     </Route>
   )
