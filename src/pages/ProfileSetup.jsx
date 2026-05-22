@@ -52,7 +52,7 @@ function ProfileSetup() {
         <div className="z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center"></div>
       )}
 
-      <div className="flex items-center justify-center w-full">
+      <div className="flex items-center justify-center w-full m-8">
         <div className="mx-auto w-full max-w-lg bg-white dark:bg-gray-700 rounded-2xl p-10 shadow-lg border border-gray-100 dark:border-gray-700">
           <div className="mb-2 flex justify-center">
             <span className="inline-block w-full max-w-[100px]">
@@ -96,7 +96,7 @@ function ProfileSetup() {
                 <textarea
                   placeholder="Tell us about yourself..."
                   rows={4}
-                  className="px-3 py-2 rounded-lg bg-white dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200 text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full shadow-sm resize-none"
+                  className="px-3 py-2 rounded-lg bg-white dark:bg-gray-600 dark:border-gray-600  dark:text-gray-200 text-black outline-none focus:bg-gray-50 duration-200 border border-gray-200 w-full shadow-sm resize-none"
                   {...register("bio", {
                     maxLength: {
                       value: 300,

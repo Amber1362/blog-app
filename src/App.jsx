@@ -17,6 +17,7 @@ function App() {
   const theme = useSelector((state) => state.theme.mode);
 
   useEffect(() => {
+    setIsLoading(true)
   authService
     .getCurrentUser()
     .then((userData) => {

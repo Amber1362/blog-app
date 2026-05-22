@@ -8,17 +8,17 @@ export default function Protected({ children, authentication = true }) {
 
   const navigate = useNavigate();
 
-  if (loading) {
-    return null;
-  }
-
   useEffect(() => {
+    if (loading) return
+  
     if (authentication && !authStatus) {
       navigate("/login");
     } else if (!authentication && authStatus) {
       navigate("/");
     }
-  }, [authStatus, navigate, authentication]);
+  }, [authStatus, navigate, authentication, loading]);
 
+  if(loading) return null
+  
   return <>{children}</>;
 }
