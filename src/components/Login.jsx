@@ -57,9 +57,6 @@ function Login() {
           navigate('/')
 
           toast.success("Welcome to Vella!");
-          console.log("USER:", userData);
-          console.log("PROFILE:", profile);
-          console.log("PROFILE COMPLETE:", profile?.profileComplete);
         }
       }
     } catch (error) {
