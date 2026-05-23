@@ -13,7 +13,17 @@ function PostCard({
   isMenuOpen,
   onEdit,
   onDelete,
+  content,
 }) {
+  const getReadTime = () => {
+    if(!content) return 1
+    const plainText = content.replace(/<[^>]*>/g, '')
+    const wordCount = plainText.trim().split(/\s+/).length
+    return Math.ceil(wordCount / 200)
+  }
+
+  const readTime = getReadTime();
+
   return (
     <Link to={`/post/${$id}`} className="h-full">
       <div className="relative w-full bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:bg-gray-600 dark:border-gray-600">
@@ -58,6 +68,8 @@ function PostCard({
             dateString={$createdAt}
           />
         </div>
+
+         <p className='text-xs text-gray-400 mt-1'>{readTime} {readTime === 1 ? 'min' : 'mins'} read</p>
       </div>
     </Link>
   );

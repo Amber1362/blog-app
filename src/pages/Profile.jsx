@@ -121,6 +121,7 @@ function Profile() {
                   title={post.title}
                   featuredImage={post.featuredImage}
                   $createdAt={post.$createdAt}
+                  content={post.content}
                   showAction={userData?.$id === post.userId}
                   isMenuOpen={openMenuId === post.$id}
                   onMenuToggle={(e) => {

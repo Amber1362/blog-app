@@ -56,12 +56,12 @@ function AllPosts() {
 
   return (
     <div className="relative w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
-      {/* Loading Overlay */}
+      {/* Loading Overlay
       {isLoading && (
         <div className="absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex justify-center items-center cursor-not-allowed">
           <Spinner />
         </div>
-      )}
+      )} */}
 
       <Container>
         {/* Page Heading */}
@@ -91,20 +91,27 @@ function AllPosts() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {searchPosts.map((post, index) => (
             <motion.div
+              key={post.$id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: index * 0.1 }}
             >
               <PostCard
-                key={post.$id}
                 $id={post.$id}
                 title={post.title}
                 featuredImage={post.featuredImage}
                 $createdAt={post.$createdAt}
+                content={post.content}
               />
             </motion.div>
           ))}
         </div>
+
+        {searchPosts.length === 0 && searchQuery && !isLoading && (
+          <p className="text-center text-gray-500 dark:text-gray-400 mt-10">
+            No posts found for "{searchQuery}"
+          </p>
+        )}
 
         {/* Intersection Observer trigger point */}
         <div ref={loadMoreRef} className="h-1" />

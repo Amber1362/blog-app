@@ -11,12 +11,15 @@ function ProfileSetup() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
   const dispatch = useDispatch();
+
+  const bioValue = watch("bio", "");
 
   const submit = async (data) => {
     setIsLoading(true);
@@ -82,8 +85,9 @@ function ProfileSetup() {
                     },
                     pattern: {
                       value: /^[a-zA-Z0-9_]+$/,
-                      message: 'Username can only contain letters, numbers and underscores.'
-                    }
+                      message:
+                        "Username can only contain letters, numbers and underscores.",
+                    },
                   })}
                 />
                 {errors.username && (
@@ -108,6 +112,9 @@ function ProfileSetup() {
                     },
                   })}
                 />
+                <p className="text-xs text-gray-400 text-right mt-1">
+                  {bioValue?.length || 0}/300
+                </p>
                 {errors.bio && (
                   <p className="text-sm text-red-500 dark:text-red-400 text-left mt-2">
                     {errors.bio.message}
