@@ -26,7 +26,7 @@ function PostCard({
 
   return (
     <Link to={`/post/${$id}`} className="h-full">
-      <div className="relative w-full bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:bg-gray-600 dark:border-gray-600">
+      <div className="relative w-full bg-white rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 dark:bg-gray-600 dark:border-gray-600 hover:scale-105 group">
         {showAction && (
           <button
             onClick={onMenuToggle}
@@ -48,11 +48,11 @@ function PostCard({
         )}
 
         {/* Image */}
-        <div className="w-full flex justify-center mb-4">
+        <div className="overflow-hidden rounded-xl mb-4">
           <img
             src={appwriteService.getFilePreview(featuredImage)}
             alt={title}
-            className="rounded-xl w-full object-cover h-48"
+            className="w-full object-cover h-48 transition-transform duration-300 group-hover:scale-110"
           />
         </div>
 
