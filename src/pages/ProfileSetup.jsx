@@ -38,7 +38,7 @@ function ProfileSetup() {
         }),
       );
       toast.success("Profile setup complete!");
-      navigate("/");
+      navigate("/profile/:name");
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -80,6 +80,10 @@ function ProfileSetup() {
                       value: 3,
                       message: "Username must be at least 3 characters.",
                     },
+                    pattern: {
+                      value: /^[a-zA-Z0-9_]+$/,
+                      message: 'Username can only contain letters, numbers and underscores.'
+                    }
                   })}
                 />
                 {errors.username && (

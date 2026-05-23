@@ -20,19 +20,19 @@ function PostCard({
         {showAction && (
           <button
             onClick={onMenuToggle}
-            className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 dark:text-gray-300 text-xl font-bold z-10"
+            className="absolute top-3 right-3 bg-black/30 text-white rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold z-10 hover:bg-black/50 cursor-pointer"
           >
             ⋮
           </button>
         )}
 
         {isMenuOpen && (
-          <div className="absolute top-8 right-3 bg-white dark:bg-gray-700 shadow-lg rounded-lg p-2 z-20">
-            <button onClick={onEdit} className="block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
-              Edit
+          <div className="absolute top-8 right-3 bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-2 z-20">
+            <button onClick={onEdit} className="block w-full text-left px-4 rounded-2xl py-2 text-sm hover:bg-white dark:hover:bg-gray-600">
+              <strong>Edit</strong>
             </button>
-            <button onClick={onDelete} className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100 dark:hover:bg-gray-600">
-              Delete
+            <button onClick={onDelete} className="block w-full text-left px-4 rounded-2xl py-2 text-sm text-red-500 hover:bg-white dark:hover:bg-gray-600">
+              <strong>Delete</strong>
             </button>
           </div>
         )}

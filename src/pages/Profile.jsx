@@ -7,6 +7,7 @@ import { Query } from "appwrite";
 import Spinner from "../components/Spinner";
 import { Popup } from "../components";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 function Profile() {
   const [posts, setPosts] = useState([]);
@@ -108,14 +109,19 @@ function Profile() {
             <div className="flex justify-center items-center py-10"><Spinner /></div>
           ) : posts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {posts.map((post) => (
+              {posts.map((post, index) => (
+                <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
+                >
                 <PostCard
                   key={post.$id}
                   $id={post.$id}
                   title={post.title}
                   featuredImage={post.featuredImage}
                   $createdAt={post.$createdAt}
-                  showAction={true}
+                  showAction={userData?.$id === post.userId}
                   isMenuOpen={openMenuId === post.$id}
                   onMenuToggle={(e) => {
                     e.preventDefault()
@@ -135,6 +141,7 @@ function Profile() {
                     setOpenMenuId(null)
                   }}
                 />
+                </motion.div>
               ))}
             </div>
           ) : (

@@ -22,7 +22,7 @@ function Header() {
   ];
 
   return (
-    <header className="py-3 shadow bg-white dark:bg-gray-900">
+    <header className="sticky top-0 z-50 py-3 shadow bg-white dark:bg-gray-900">
       <Container>
         <nav className="flex items-center">
           
