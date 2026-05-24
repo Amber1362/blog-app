@@ -37,8 +37,8 @@ function ForgotPassword() {
                 <Spinner />
             </div>
         )}
-        <div className='m-8'>
-            <div className='mx-auto w-full max-w-lg bg-white dark:bg-gray-700 dark:border-gray-700 shadow-md rounded-xl p-10 border border-black/10'>
+        <div className='px-4 py-8'>
+            <div className='mx-auto w-full max-w-lg bg-white dark:bg-gray-700 dark:border-gray-700 shadow-md rounded-xl p-6 sm:p-10 border border-black/10'>
                 <div className='mb-2 flex justify-center'>
                     <span className='inline-block w-full max-w-[100px]'>
                         <Logo width='100%' />

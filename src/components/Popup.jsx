@@ -3,7 +3,7 @@ import { Button, Logo } from './index'
 
 function Popup({ para, onConfirm, onCancel }) {
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm'>
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4'>
       <div className='w-full max-w-sm bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl'>
         {/* Logo */}
         <div className='mb-4 flex justify-center'>

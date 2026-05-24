@@ -41,7 +41,7 @@ function ProfileSetup() {
         }),
       );
       toast.success("Profile setup complete!");
-      navigate("/profile/:name");
+      navigate(`/profile/${updatedProfile.username || userData.name.toLowerCase().replace(/\s+/g, '-')}`);
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -55,8 +55,8 @@ function ProfileSetup() {
         <div className="z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center"></div>
       )}
 
-      <div className="flex items-center justify-center w-full m-8">
-        <div className="mx-auto w-full max-w-lg bg-white dark:bg-gray-700 rounded-2xl p-10 shadow-lg border border-gray-100 dark:border-gray-700">
+      <div className="flex items-center justify-center w-full px-4 py-8">
+        <div className="mx-auto w-full max-w-lg bg-white dark:bg-gray-700 rounded-2xl p-6 sm:p-10 shadow-lg border border-gray-100 dark:border-gray-700">
           <div className="mb-2 flex justify-center">
             <span className="inline-block w-full max-w-[100px]">
               <Logo width="100%" />

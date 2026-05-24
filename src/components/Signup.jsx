@@ -47,7 +47,7 @@ function Signup() {
             name: userData.name,
           });
           toast.success("Account created successfully!");
-            navigate("/profile-setup");
+          navigate("/profile-setup");
         }
       }
     } catch (error) {
@@ -76,8 +76,8 @@ function Signup() {
         <div className="z-50  cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center"></div>
       )}
 
-      <div className="flex items-center justify-center">
-        <div className="mx-auto w-full max-w-lg bg-white dark:bg-gray-700 dark:border-gray-700 rounded-2xl p-10 shadow-lg border border-gray-100">
+      <div className="flex items-center justify-center px-4">
+        <div className="mx-auto w-full max-w-lg bg-white dark:bg-gray-700 dark:border-gray-700 rounded-2xl p-6 sm:p-10 shadow-lg border border-gray-100">
           <div className="mb-2 flex justify-center">
             <span className="inline-block w-full max-w-[100px]">
               <Logo width="100%" />

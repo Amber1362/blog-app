@@ -112,7 +112,7 @@ function PostForm({post}) {
 
         <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
             {error && <p className='text-red-600 mt-8 text-left mb-4 font-bold text-sm'>{error}</p>}
-            <div className="w-2/3 px-2">
+            <div className="w-full md:w-2/3 px-2">
               <div className='block'>
                 <Input
                     label="Title :"
@@ -139,7 +139,7 @@ function PostForm({post}) {
                 <RTE label="Content :" name="content" control={control} defaultValue={getValues("content")} />
             </div>
 
-            <div className="w-1/3 px-2">
+            <div className="w-full md:w-1/3 px-2 mt-4 md:mt-0">
               <div>
                 <Button
                     type='button'

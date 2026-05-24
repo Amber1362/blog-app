@@ -54,8 +54,8 @@ function ResetPassword() {
             </div>
         )}
 
-        <div className='flex items-center justify-center w-full my-8'>
-            <div className='mx-auto w-full max-w-lg bg-white dark:bg-gray-700 dark:border-gray-700 rounded-2xl p-10 border border-black/10 shadow-md'>
+        <div className='flex items-center justify-center w-full px-4 my-8'>
+            <div className='mx-auto w-full max-w-lg bg-white dark:bg-gray-700 dark:border-gray-700 rounded-2xl p-6 sm:p-10 border border-black/10 shadow-md'>
                 <div className='mb-2 flex justify-center'>
                     <span className='inline-block w-full max-w-[100px]'>
                         <Logo width='100%' />

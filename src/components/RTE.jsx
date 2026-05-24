@@ -23,7 +23,7 @@ function RTE({name, control, label, defaultValue = ''}) {
               ? 'body { background-color: #4B5563; border-color: #4B5563; color: white; font-family: Helvetica, Arial, sans-serif; font-size: 14px; }' 
               : 'body { background-color: white; color: black; font-family: Helvetica, Arial, sans-serif; font-size: 14px; }',
             initialValue: defaultValue,
-            height: 500,
+            height: window.innerWidth < 640 ? 300 : 500,
             menubar: true,
             plugins: [
                 'image',

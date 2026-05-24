@@ -105,7 +105,7 @@ function Post() {
             />
 
             {isAuthor && (
-              <div className='absolute top-8 right-8 flex gap-3'>
+              <div className='absolute top-3 right-3 sm:top-8 sm:right-8 flex gap-2 sm:gap-3'>
 
                 <Link to={`/edit-post/${post.$id}`}
                 onClick={(e) => {
@@ -117,7 +117,7 @@ function Post() {
                 >
                   <Button
                     bgColor='bg-green-500'
-                    className='hover:bg-green-600 cursor-pointer'
+                    className='hover:bg-green-600 cursor-pointer text-sm sm:text-base px-3 sm:px-4'
                   >
                     Edit
                   </Button>
@@ -126,7 +126,7 @@ function Post() {
                 <Button
                   isLoading={isLoading}
                   bgColor='bg-red-500'
-                  className='hover:bg-red-600 cursor-pointer'
+                  className='hover:bg-red-600 cursor-pointer text-sm sm:text-base px-3 sm:px-4'
                   onClick={deletePost}
                 >
                   Delete
@@ -150,7 +150,7 @@ function Post() {
           </div>
 
           {/* Content */}
-          <div className='bg-white dark:bg-gray-600 dark:border-gray-600 rounded-2xl shadow-md p-8'>
+          <div className='bg-white dark:bg-gray-600 rounded-2xl shadow-md p-4 sm:p-8'>
             <div className='browser-css text-gray-700 dark:text-gray-200 leading-8'>
               {parse(post.content)}
             </div>
