@@ -8,6 +8,7 @@ import Spinner from "../components/Spinner";
 import { Popup } from "../components";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import PostCardSkeleton from "../components/PostCardSkeleton";
 
 function Profile() {
   const [posts, setPosts] = useState([]);
@@ -106,7 +107,11 @@ function Profile() {
           <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">My Posts</h2>
 
           {isLoading ? (
-            <div className="flex justify-center items-center py-10"><Spinner /></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <PostCardSkeleton key={i} />
+            ))}
+          </div>
           ) : posts.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {posts.map((post, index) => (

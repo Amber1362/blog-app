@@ -4,6 +4,7 @@ import { Container, PostCard, Input } from "../components";
 import Spinner from "../components/Spinner";
 import { Query } from "appwrite";
 import { motion } from "framer-motion";
+import PostCardSkeleton from "../components/PostCardSkeleton";
 
 function AllPosts() {
   const [posts, setPosts] = useState([]);
@@ -56,13 +57,6 @@ function AllPosts() {
 
   return (
     <div className="relative w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
-      {/* Loading Overlay
-      {isLoading && (
-        <div className="absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex justify-center items-center cursor-not-allowed">
-          <Spinner />
-        </div>
-      )} */}
-
       <Container>
         {/* Page Heading */}
         <div className="flex">
@@ -87,7 +81,29 @@ function AllPosts() {
           </div>
         </div>
 
-        {/* Posts Grid */}
+        {searchPosts.length === 0 && searchQuery && !isLoading && (
+          <p className="text-center text-gray-500 dark:text-gray-400 mt-10">
+            No posts found for "{searchQuery}"
+          </p>
+        )}
+
+        {/* Intersection Observer trigger point */}
+        <div ref={loadMoreRef} className="h-1" />
+
+        {/* Loading indicator at bottom */}
+        {isLoading && page > 1 && (
+          <div className="flex justify-center mt-6">
+            <Spinner />
+          </div>
+        )}
+
+        {isLoading && page === 1 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <PostCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {searchPosts.map((post, index) => (
             <motion.div
@@ -106,27 +122,6 @@ function AllPosts() {
             </motion.div>
           ))}
         </div>
-
-        {searchPosts.length === 0 && searchQuery && !isLoading && (
-          <p className="text-center text-gray-500 dark:text-gray-400 mt-10">
-            No posts found for "{searchQuery}"
-          </p>
-        )}
-
-        {/* Intersection Observer trigger point */}
-        <div ref={loadMoreRef} className="h-1" />
-
-        {/* Loading indicator at bottom */}
-        {isLoading && page > 1 && (
-          <div className="flex justify-center mt-6">
-            <Spinner />
-          </div>
-        )}
-
-        {isLoading && page === 1 && (
-          <div className="absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex justify-center items-center cursor-not-allowed">
-            <Spinner />
-          </div>
         )}
 
         {/* No more posts */}

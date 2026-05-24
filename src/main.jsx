@@ -18,6 +18,7 @@ import ResetPassword from './pages/ResetPassword.jsx'
 import {PrivacyPolicy, TermsAndConditions} from './components/index.js'
 import Profile from './pages/Profile.jsx'
 import ProfileSetup from './pages/ProfileSetup.jsx'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const router = createBrowserRouter(
   createRoutesFromElements(

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
 import { motion } from 'framer-motion'
 import { Link } from "react-router-dom";
+import PostCardSkeleton from "../components/PostCardSkeleton";
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -35,41 +36,46 @@ function Home() {
 
   return (
     <div className="relative w-full min-h-screen bg-gray-200 py-10 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
-      {/* Loading Overlay */}
+      {/* Loading Overlay
       {isLoading && (
         <div className="absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex justify-center items-center cursor-not-allowed">
           <Spinner />
         </div>
-      )}
+      )} */}
 
       <Container>
         {authStatus ? (
-          <>
-            {/* Welcome Section */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+         <>
+        <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
                 Latest Posts
-              </h1>
-
-              <p className="text-gray-500 mt-1 dark:text-gray-400">
+            </h1>
+            <p className="text-gray-500 mt-1 dark:text-gray-400">
                 Discover stories, ideas, and shared experiences
-              </p>
-            </div>
+            </p>
+        </div>
 
-            {/* Posts Grid */}
+        {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {posts.map((post, index) => (
-                <motion.div
-                  key={post.$id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: index * 0.1 }}
-                >
-                  <PostCard {...post} />
-                </motion.div>
-              ))}
+                {[...Array(4)].map((_, i) => (
+                    <PostCardSkeleton key={i} />
+                ))}
             </div>
-          </>
+        ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {posts.map((post, index) => (
+                    <motion.div
+                        key={post.$id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: index * 0.1 }}
+                    >
+                        <PostCard {...post} />
+                    </motion.div>
+                ))}
+            </div>
+        )}
+    </>
         ) : (
           /* Logged Out State */
           <div className='w-full min-h-screen bg-gray-200 dark:bg-gray-800'>
