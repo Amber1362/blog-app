@@ -106,7 +106,7 @@ function Home() {
                     </Button>
                 </Link>
                 <Link to='/all-posts' className='w-full sm:w-auto'>
-                    <Button bgColor='bg-white dark:bg-gray-700' className='w-full sm:w-auto text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer px-8 py-3'>
+                    <Button bgColor='bg-white dark:bg-gray-700' textColor="text-black" className='w-full sm:w-auto text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer px-8 py-3'>
                         Explore Posts
                     </Button>
                 </Link>

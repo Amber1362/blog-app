@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { login, logout, setLoading } from "./store/authSlice";
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import usersService from "./appwrite/users";
@@ -15,41 +15,50 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme.mode);
+  const navigate = useNavigate()
 
   useEffect(() => {
     setIsLoading(true)
-  authService
-    .getCurrentUser()
-    .then((userData) => {
-      if (userData) {
-        return usersService
-          .getUserProfile(userData.$id)
-          .then((profile) => {
-            dispatch(
-              login({
-                userData: {
-                  $id: userData.$id,
-                  name: userData.name,
-                  email: userData.email,
-                  username: profile?.username || "",
-                  bio: profile?.bio || "",
-                  profileComplete: profile?.profileComplete || false,
-                },
-              }),
-            );
-          });
-      } else {
-        dispatch(logout());
-      }
-    })
-    .catch(() => {
-      dispatch(logout());
-    })
-    .finally(() => {
-      dispatch(setLoading(false))
-      setIsLoading(false)
-    });
-}, []);
+    authService
+        .getCurrentUser()
+        .then((userData) => {
+            if(userData) {
+                return usersService.getUserProfile(userData.$id)
+                    .then(async (profile) => {
+                        if(!profile) {
+                            // new user (Google OAuth or legacy) — create profile
+                            profile = await usersService.createUserProfile({
+                                userId: userData.$id,
+                                name: userData.name,
+                            })
+                        }
+                        dispatch(login({
+                            userData: {
+                                $id: userData.$id,
+                                name: userData.name,
+                                email: userData.email,
+                                username: profile?.username || '',
+                                bio: profile?.bio || '',
+                                profileComplete: profile?.profileComplete || false,
+                            }
+                        }))
+                        if(!profile?.profileComplete) {
+                            navigate('/profile-setup')
+                            return
+                        }
+                    })
+            } else {
+                dispatch(logout())
+            }
+        })
+        .catch(() => {
+            dispatch(logout())
+        })
+        .finally(() => {
+            dispatch(setLoading(false))
+            setIsLoading(false)
+        })
+}, [])
 
   useEffect(() => {
     const root = document.body;

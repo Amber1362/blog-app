@@ -54,7 +54,7 @@ function Login() {
             return;
           }
 
-          navigate('/')
+          navigate("/");
 
           toast.success("Welcome to Vella!");
         }
@@ -181,6 +181,25 @@ function Login() {
               >
                 Sign in
               </Button>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3 my-2">
+                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
+                <span className="text-xs text-gray-400">or</span>
+                <div className="flex-1 h-px bg-gray-200 dark:bg-gray-600"></div>
+              </div>
+
+              {/* Google Button */}
+              <button
+                type="button"
+                onClick={() => authService.loginWithGoogle()}
+                className="w-full flex items-center justify-center gap-3 border border-gray-200 dark:border-gray-600 rounded-lg py-2 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
+              >
+                <img src="https://www.google.com/favicon.ico" width={18} />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Continue with Google
+                </span>
+              </button>
             </div>
           </form>
         </div>
