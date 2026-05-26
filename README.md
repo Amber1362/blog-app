@@ -1,81 +1,180 @@
-#  Blog App (Learning Project)
+# Vella — Modern Blogging Platform
 
-This is a full-stack blog application built using React, Redux Toolkit, React Router, and Appwrite as backend.
+A full-stack blogging platform built with React and Appwrite, featuring AI-assisted content generation, dark mode, infinite scrolling, and a modern user experience.
 
-This project was built while following a tutorial, and then extended with my own improvements including custom date formatting, error handling, and debugging real-world API issues.
+## Live Demo
 
+https://blog-app-4iu2.vercel.app
 
-##  Features
+## Screenshots
 
-- User authentication (Login / Signup / Logout)
-- Create, edit, delete blog posts
-- Dynamic routing using React Router
-- Protected routes using Auth Layout
-- Image upload support via Appwrite
-- Responsive UI with reusable components
-- Custom post date formatting:
-  - Just now
-  - Minutes / hours ago
-  - Yesterday
-  - Full date for older posts
+### Landing Page
+![Landing Page](./screenshots/landing-page.png)
 
+### Home Feed
+![Home Feed](./screenshots/home-feed.png)
 
-## Intent
+### Create Post
+![Create Post](./screenshots/create-post.png)
 
-This project was built to understand how real-world React applications are structured, including folder organization, reusable component patterns, routing flow, and state management architecture.
+### AI Content Generation
+![AI Content Generation](./screenshots/ai-generation.png)
 
+### Profile Page
+![Profile Page](./screenshots/profile-page.png)
 
-##  My Learnings
+## Features
 
-Through this project, I learned:
+### Authentication
 
-- How React Router works with nested routes and dynamic params (`:slug`)
-- How to manage global state using Redux Toolkit
-- How authentication flow works in real applications
-- How frontend connects with backend (Appwrite)
-- How to debug real errors (401, 403, 400, etc.)
-- How to work with JavaScript Date for relative time display
+* Email and password authentication
+* Google OAuth (Sign in with Google)
+* Forgot password and password reset via email
+* Profile setup flow after signup
+* Password visibility toggle
 
+### Posts
 
-##  Challenges I Faced
+* Create, edit, and delete blog posts
+* Rich text editor powered by TinyMCE
+* Featured image upload support
+* Active and inactive post status management
+* SEO-friendly slug-based URLs
+* Automatic read time estimation
+* Relative date formatting (Today, Yesterday, X minutes ago)
 
-- Handling authentication errors (401/403)
-- Fixing API request issues
-- Understanding route parameters using `useParams`
-- Managing component structure (pages vs components)
-- Debugging Git/GitHub setup issues
-- Understanding React Hook Form and integrating third-party components like RTE editor
-- Redux toolkit setup and understanding of concepts in it
+### AI Writing Assistant
 
+* Generate blog content from a post title using Google Gemini AI
+* Copy generated content to clipboard
 
-##  Custom Improvements
+### User Profile
 
-Even though this was tutorial-based, I added:
+* Custom username and bio setup
+* View authored posts with total post count
+* Edit and delete posts directly from the profile page
+* Bio character counter
 
-- Custom date/time formatting system
-- Better error handling understanding
-- Improved debugging workflow
-- GitHub workflow setup from scratch
+### Discovery
 
+* Infinite scrolling using the Intersection Observer API
+* Real-time search by post title
+* Newest posts displayed first
+* Guest access without requiring authentication
 
-##  Tech Stack
+### User Experience
 
-- React
-- Redux Toolkit
-- React Router
-- Appwrite
-- Tailwind CSS
+* Dark mode with localStorage persistence
+* Skeleton loaders across post grids
+* Toast notifications
+* Framer Motion animations
+* Sticky navigation header
+* Mobile hamburger menu
+* Hover effects and image zoom interactions
+* Delete confirmation modal
+* Network status detection (online/offline notifications)
+* Fully responsive design
 
+## Tech Stack
 
-##  Note
+### Frontend
 
-This project is part of my learning journey and will continue to evolve as I improve my skills.
+* React 19
+* Vite
+* Redux Toolkit
+* React Router DOM
+* React Hook Form
+* Tailwind CSS v4
+* TinyMCE
 
+### Backend
 
-##  Future Improvements
+* Appwrite Authentication
+* Appwrite Database
+* Appwrite Storage
 
-- Add search functionality
-- Add categories/tags for posts
-- Improve UI/UX design
-- Add pagination
-- Deploy live version
+### AI Integration
+
+* Google Gemini API
+
+### Libraries & Tools
+
+* Framer Motion
+* React Hot Toast
+* React Loading Skeleton
+* React Icons
+
+## Run Locally
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Amber1362/blog-app.git
+cd blog-app
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+
+Create a `.env` file in the project root and add:
+
+```env
+VITE_APPWRITE_URL=
+VITE_APPWRITE_PROJECT_ID=
+VITE_APPWRITE_DATABASE_ID=
+VITE_APPWRITE_COLLECTION_ID=
+VITE_APPWRITE_USERS_COLLECTION_ID=
+VITE_APPWRITE_BUCKET_ID=
+VITE_GEMINI_API_KEY=
+VITE_APP_URL=http://localhost:5173
+```
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+### 5. Open the application
+
+```text
+http://localhost:5173
+```
+
+## Project Structure
+
+```text
+src/
+├── appwrite/      # Appwrite authentication, database and storage services
+├── assets/        # Images, logos and static assets
+├── components/    # Reusable UI components
+├── conf/          # Environment and application configuration
+├── gemini/        # Google Gemini AI integration
+├── pages/         # Application pages and routes
+├── store/         # Redux Toolkit store and slices
+├── App.jsx        # Root application component
+├── App.css
+├── index.css
+└── main.jsx       # Application entry point
+```
+
+## Roadmap
+
+* User follow system
+* Comments and replies
+* Post bookmarking
+* Post likes and reactions
+* Email notifications
+* Rich profile customization
+* Trending posts section
+
+## Author
+
+Amber Singh
+
+GitHub: https://github.com/Amber1362
