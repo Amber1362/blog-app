@@ -5,6 +5,7 @@ import Spinner from "../components/Spinner";
 import { Query } from "appwrite";
 import { motion } from "framer-motion";
 import PostCardSkeleton from "../components/PostCardSkeleton";
+import usersService from "../appwrite/users";
 
 function AllPosts() {
   const [posts, setPosts] = useState([]);
@@ -25,10 +26,31 @@ function AllPosts() {
         Query.offset((page - 1) * limit),
         Query.orderDesc("$createdAt"),
       ])
-      .then((posts) => {
-        if (posts) {
-          setPosts((prev) => [...prev, ...posts.documents]);
-          setHasMore(posts.documents.length === limit);
+      .then(async (result) => {
+        if (result) {
+          const posts = result.documents;
+          const uniqueUserIds = [...new Set(posts.map((p) => p.userId))];
+          console.log(uniqueUserIds)
+          const authorsResult = await usersService.getUsersByIds(uniqueUserIds);
+
+          const authorMap = {};
+          authorsResult.documents.forEach((author) => {
+            authorMap[author.userId] = author;
+          });
+
+          const postsWithAuthor = posts.map((post) => ({
+            ...post,
+            author: authorMap[post.userId] || null,
+          }));
+
+          if (uniqueUserIds.length === 0) {
+            setPosts((prev) => [...prev, ...posts]);
+            setHasMore(posts.length === limit);
+            return;
+          }
+
+          setPosts((prev) => [...prev, ...postsWithAuthor]);
+          setHasMore(posts.length === limit);
         }
       })
       .finally(() => {
@@ -118,6 +140,7 @@ function AllPosts() {
                   featuredImage={post.featuredImage}
                   $createdAt={post.$createdAt}
                   content={post.content}
+                  author={post.author}
                 />
               </motion.div>
             ))}

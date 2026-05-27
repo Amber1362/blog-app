@@ -59,8 +59,36 @@ export class UsersService {
       throw error;
     }
   }
+
+  async getUsersByIds(userIds) {
+    try {
+      const result = await this.database.listDocuments(
+        conf.appwriteDatabaseId,
+        conf.appwriteUsersCollectionId,
+        [Query.equal("userId", userIds)],
+      );
+      return result;
+    } catch (error) {
+      console.log("Appwrite service :: getUsersByIds :: error", error);
+      throw error;
+    }
+  }
+
+  async getUserByUsername(username) {
+    try {
+      const result = await this.database.listDocuments(
+        conf.appwriteDatabaseId,
+        conf.appwriteUsersCollectionId,
+        [Query.equal("username", username)],
+      );
+      return result.documents[0] || null;
+    } catch (error) {
+      console.log("Appwrite service :: getUserByUsername :: error", error);
+      throw error;
+    }
+  }
 }
 
-const usersService = new UsersService()
+const usersService = new UsersService();
 
-export default usersService
+export default usersService;

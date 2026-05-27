@@ -34,7 +34,7 @@ const router = createBrowserRouter(
        <Route path='/post/:slug' element={<Post />}/>
        <Route path='/forgot-password' element={<AuthLayout authentication={false}><ForgotPassword /></AuthLayout>}/>
        <Route path='/reset-password' element={<AuthLayout authentication={false}><ResetPassword /></AuthLayout>}/>
-       <Route path='/profile/:name' element={<AuthLayout authentication={true}><Profile /></AuthLayout>}/>
+       <Route path='/profile/:name' element={<Profile />} />
        <Route path='/profile-setup' element={<AuthLayout authentication={true}><ProfileSetup /></AuthLayout>}/>
 
     </Route>
