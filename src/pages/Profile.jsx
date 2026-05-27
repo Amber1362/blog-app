@@ -18,17 +18,17 @@ function Profile() {
   const [popup, setPopup] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
 
-  const { name } = useParams();
+  const { username } = useParams();
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
   const [profileData, setProfileData] = useState(null);
 
   useEffect(() => {
-    if (!name) return;
+    if (!username) return;
     setIsLoading(true);
 
     usersService
-      .getUserByUsername(name)
+      .getUserByUsername(username)
       .then((profile) => {
         if (profile) {
           setProfileData(profile);

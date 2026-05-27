@@ -55,7 +55,7 @@ function Header() {
           <ul className="hidden sm:flex items-center gap-2">
             {authStatus && userData && (
               <li>
-                <NavLink to={`/profile/${userData.name.toLowerCase().replace(/\s+/g, "-")}`}>
+                <NavLink to={`/profile/${userData.username.toLowerCase().replace(/\s+/g, "-")}`}>
                   <div className='w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold cursor-pointer hover:bg-indigo-700'>
                     {userData.name.charAt(0).toUpperCase()}
                   </div>
@@ -115,7 +115,7 @@ function Header() {
               {authStatus && userData && (
                 <li>
                   <NavLink
-                    to={`/profile/${userData.name.toLowerCase().replace(/\s+/g, "-")}`}
+                    to={`/profile/${userData.username.toLowerCase().replace(/\s+/g, "-")}`}
                     onClick={() => setMenuOpen(false)}
                     className="block px-4 py-3 text-black dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg font-medium"
                   >

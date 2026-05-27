@@ -76,7 +76,7 @@ function PostCard({
             onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            navigate(`/profile/${author.username}`)
+            navigate(`/profile/${author.username.toLowerCase().replace(/\s+/g, "-")}`)
             }}
             className="text-xs text-indigo-500 dark:text-indigo-400 font-medium hover:underline mt-1 block"
           >

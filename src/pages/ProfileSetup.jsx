@@ -41,7 +41,7 @@ function ProfileSetup() {
         }),
       );
       toast.success("Profile setup complete!");
-      navigate(`/profile/${updatedProfile.username || userData.name.toLowerCase().replace(/\s+/g, '-')}`);
+      navigate(`/profile/${updatedProfile.username.toLowerCase().replace(/\s+/g, "-") || userData.username.toLowerCase().replace(/\s+/g, '-')}`);
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     } finally {

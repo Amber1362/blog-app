@@ -30,6 +30,12 @@ function AllPosts() {
         if (result) {
           const posts = result.documents;
           const uniqueUserIds = [...new Set(posts.map((p) => p.userId))];
+
+          if (uniqueUserIds.length === 0) {
+            setPosts((prev) => [...prev, ...posts]);
+            setHasMore(posts.length === limit);
+            return;
+          }
           console.log(uniqueUserIds)
           const authorsResult = await usersService.getUsersByIds(uniqueUserIds);
 
@@ -42,12 +48,6 @@ function AllPosts() {
             ...post,
             author: authorMap[post.userId] || null,
           }));
-
-          if (uniqueUserIds.length === 0) {
-            setPosts((prev) => [...prev, ...posts]);
-            setHasMore(posts.length === limit);
-            return;
-          }
 
           setPosts((prev) => [...prev, ...postsWithAuthor]);
           setHasMore(posts.length === limit);
@@ -148,7 +148,7 @@ function AllPosts() {
         )}
 
         {/* No more posts */}
-        {!hasMore && (
+        {!hasMore && !isLoading && (
           <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
             You've reached the end.
           </p>
