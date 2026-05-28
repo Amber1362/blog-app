@@ -42,7 +42,7 @@ function Profile() {
         if (posts) setPosts(posts.documents);
       })
       .finally(() => setIsLoading(false));
-  }, [name]);
+  }, [username]);
 
   const isOwner = userData?.$id === profileData?.userId;
 
@@ -94,8 +94,17 @@ function Profile() {
         {/* Profile Header */}
         <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-8 mb-8">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <div className="w-24 h-24 rounded-full bg-indigo-100 dark:bg-gray-600 flex justify-center items-center shrink-0">
-              <i className="fa-regular fa-circle-user text-5xl text-indigo-600 dark:text-gray-300"></i>
+
+            <div className="w-24 h-24 rounded-full bg-indigo-100 dark:bg-gray-600 flex justify-center items-center shrink-0 overflow-hidden">
+              {profileData?.profilePhoto ? (
+                <img
+                  src={appwriteService.getFilePreview(profileData.profilePhoto)}
+                  alt={profileData.username}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <i className="fa-regular fa-circle-user text-5xl text-indigo-600 dark:text-gray-300"></i>
+              )}
             </div>
 
             <div className="flex-1">
@@ -103,7 +112,7 @@ function Profile() {
                 {profileData?.name}
               </h1>
               <p className="text-indigo-600 dark:text-indigo-400 mt-1 font-medium">
-                @{profileData?.username || name}
+                @{profileData?.username || username}
               </p>
               <p className="text-gray-500 dark:text-gray-400 mt-2">
                 {profileData?.email}
@@ -123,7 +132,7 @@ function Profile() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                    {userData?.profileComplete ? "100%" : "70%"}
+                    {profileData?.profileComplete ? "100%" : "70%"}
                   </p>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
                     Profile Complete
@@ -134,7 +143,7 @@ function Profile() {
 
             <div>
               {isOwner && (
-                <Link to="/profile-setup">
+                <Link to="/edit-profile">
                   <Button className="bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer">
                     Edit Profile
                   </Button>

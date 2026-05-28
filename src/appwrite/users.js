@@ -17,6 +17,7 @@ export class UsersService {
     name,
     username = "",
     bio = "",
+    profilePhoto = "",
     profileComplete = false,
   }) {
     try {
@@ -24,7 +25,7 @@ export class UsersService {
         conf.appwriteDatabaseId,
         conf.appwriteUsersCollectionId,
         ID.unique(),
-        { userId, name, username, bio, profileComplete },
+        { userId, name, username, bio, profileComplete, profilePhoto },
       );
     } catch (error) {
       console.log("Appwrite service :: createUserProfile :: error", error);
@@ -46,13 +47,13 @@ export class UsersService {
     }
   }
 
-  async updateUserProfile(documentId, { username, bio, profileComplete }) {
+  async updateUserProfile(documentId, { username, bio, profileComplete, profilePhoto }) {
     try {
       return await this.database.updateDocument(
         conf.appwriteDatabaseId,
         conf.appwriteUsersCollectionId,
         documentId,
-        { username, bio, profileComplete },
+        { username, bio, profileComplete, profilePhoto },
       );
     } catch (error) {
       console.log("Appwrite service :: updateUserProfile :: error", error);

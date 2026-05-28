@@ -6,14 +6,20 @@ import { Button, Input, Logo } from "../components";
 import usersService from "../appwrite/users";
 import { login } from "../store/authSlice";
 import toast from "react-hot-toast";
+import appwriteService from "../appwrite/config";
 
-function ProfileSetup() {
+function ProfileSetup({ profileDetails }) {
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      username: profileDetails?.username || "",
+      bio: profileDetails?.bio || "",
+    },
+  });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
@@ -24,24 +30,79 @@ function ProfileSetup() {
   const submit = async (data) => {
     setIsLoading(true);
     try {
-      const profile = await usersService.getUserProfile(userData.$id);
-      const updatedProfile = await usersService.updateUserProfile(profile.$id, {
-        username: data.username,
-        bio: data.bio,
-        profileComplete: true,
-      });
-      dispatch(
-        login({
-          userData: {
-            ...userData,
-            username: updatedProfile.username,
-            bio: updatedProfile.bio,
-            profileComplete: updatedProfile.profileComplete,
+      if (profileDetails) {
+        const file = data.image?.[0]
+          ? await appwriteService.uploadFile(data.image[0])
+          : null;
+
+        if (file && profileDetails.profilePhoto) {
+          await appwriteService.deleteFile(profileDetails.profilePhoto);
+        }
+
+        const updatedProfile = await usersService.updateUserProfile(
+          profileDetails.$id,
+          {
+            ...data,
+            profilePhoto: file ? file.$id : profileDetails.profilePhoto,
           },
-        }),
-      );
-      toast.success("Profile setup complete!");
-      navigate(`/profile/${updatedProfile.username.toLowerCase().replace(/\s+/g, "-") || userData.username.toLowerCase().replace(/\s+/g, '-')}`);
+        );
+
+        if (updatedProfile) {
+          dispatch(
+            login({
+              userData: {
+                ...userData,
+                profilePhoto: updatedProfile.profilePhoto,
+                username: updatedProfile.username,
+                bio: updatedProfile.bio,
+                profileComplete: updatedProfile.profileComplete,
+              },
+            }),
+          );
+          toast.success("Profile updated successfully");
+          navigate(
+            `/profile/${updatedProfile.username.toLowerCase().replace(/\s+/g, "-") || userData.username.toLowerCase().replace(/\s+/g, "-")}`,
+          );
+        }
+      } else {
+        const file = data.image?.[0]
+          ? await appwriteService.uploadFile(data.image[0])
+          : null;
+
+        if (file) {
+          const fileId = file.$id;
+          data.profilePhoto = fileId;
+        }
+
+        const profile = await usersService.getUserProfile(userData.$id);
+
+        const updatedProfile = await usersService.updateUserProfile(
+          profile.$id,
+          {
+            ...data,
+            profilePhoto: file ? file.$id : profile?.profilePhoto,
+            profileComplete: true,
+          },
+        );
+
+        dispatch(
+          login({
+            userData: {
+              ...userData,
+              profilePhoto: updatedProfile.profilePhoto,
+              username: updatedProfile.username,
+              bio: updatedProfile.bio,
+              profileComplete: updatedProfile.profileComplete,
+            },
+          }),
+        );
+
+        toast.success("Profile setup complete!");
+
+        navigate(
+          `/profile/${updatedProfile.username.toLowerCase().replace(/\s+/g, "-")}`,
+        );
+      }
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -73,6 +134,26 @@ function ProfileSetup() {
           <form onSubmit={handleSubmit(submit)} className="mt-8">
             <div className="space-y-5">
               <div className="block">
+                <div className="block">
+                  <Input
+                    label="Profile Photo:"
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg"
+                    className="shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200"
+                    {...register("image")}
+                  />
+                </div>
+
+                {profileDetails?.profilePhoto && (
+                  <img
+                    src={appwriteService.getFilePreview(
+                      profileDetails.profilePhoto,
+                    )}
+                    alt={profileDetails.username}
+                    className="w-20 h-20 rounded-full object-cover mt-3"
+                  />
+                )}
+
                 <Input
                   label="Username:"
                   placeholder="Enter your username"
@@ -127,7 +208,7 @@ function ProfileSetup() {
                 isLoading={isLoading}
                 className="w-full flex justify-center cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white"
               >
-                Complete Setup
+                {profileDetails ? "Update Profile" : "Complete Setup"}
               </Button>
             </div>
           </form>

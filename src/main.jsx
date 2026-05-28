@@ -19,6 +19,7 @@ import {PrivacyPolicy, TermsAndConditions} from './components/index.js'
 import Profile from './pages/Profile.jsx'
 import ProfileSetup from './pages/ProfileSetup.jsx'
 import 'react-loading-skeleton/dist/skeleton.css'
+import EditProfile from './pages/EditProfile.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,7 +37,7 @@ const router = createBrowserRouter(
        <Route path='/reset-password' element={<AuthLayout authentication={false}><ResetPassword /></AuthLayout>}/>
        <Route path='/profile/:username' element={<Profile />} />
        <Route path='/profile-setup' element={<AuthLayout authentication={true}><ProfileSetup /></AuthLayout>}/>
-
+       <Route path="/edit-profile" element={<AuthLayout authentication={true}><EditProfile /></AuthLayout>} />
     </Route>
   )
 )

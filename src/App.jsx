@@ -37,6 +37,7 @@ function App() {
                                 $id: userData.$id,
                                 name: userData.name,
                                 email: userData.email,
+                                profilePhoto: profile?.profilePhoto || null,
                                 username: profile?.username || '',
                                 bio: profile?.bio || '',
                                 profileComplete: profile?.profileComplete || false,
