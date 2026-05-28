@@ -11,7 +11,7 @@ function AllPosts() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const limit = 4;
+  const limit = 8;
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef(null);
@@ -36,7 +36,7 @@ function AllPosts() {
             setHasMore(posts.length === limit);
             return;
           }
-          console.log(uniqueUserIds)
+
           const authorsResult = await usersService.getUsersByIds(uniqueUserIds);
 
           const authorMap = {};
@@ -64,7 +64,7 @@ function AllPosts() {
       if (entries[0].isIntersecting && hasMore && !isLoading) {
         setPage((prev) => prev + 1);
       }
-    });
+    }, {threshold: 1.0});
 
     if (loadMoreRef.current) {
       observerRef.current.observe(loadMoreRef.current);
@@ -109,9 +109,6 @@ function AllPosts() {
           </p>
         )}
 
-        {/* Intersection Observer trigger point */}
-        <div ref={loadMoreRef} className="h-1" />
-
         {/* Loading indicator at bottom */}
         {isLoading && page > 1 && (
           <div className="flex justify-center mt-6">
@@ -121,7 +118,7 @@ function AllPosts() {
 
         {isLoading && page === 1 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(4)].map((_, i) => (
+            {[...Array(8)].map((_, i) => (
               <PostCardSkeleton key={i} />
             ))}
           </div>
@@ -146,6 +143,9 @@ function AllPosts() {
             ))}
           </div>
         )}
+
+        {/* Intersection Observer trigger point */}
+        <div ref={loadMoreRef} className="h-1" />
 
         {/* No more posts */}
         {!hasMore && !isLoading && (
