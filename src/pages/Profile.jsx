@@ -17,6 +17,7 @@ function Profile() {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [popup, setPopup] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
+  const [zoomedPhoto, setZoomedPhoto] = useState(false);
 
   const { username } = useParams();
   const navigate = useNavigate();
@@ -94,18 +95,30 @@ function Profile() {
         {/* Profile Header */}
         <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-8 mb-8">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
-
             <div className="w-24 h-24 rounded-full bg-indigo-100 dark:bg-gray-600 flex justify-center items-center shrink-0 overflow-hidden">
               {profileData?.profilePhoto ? (
                 <img
                   src={appwriteService.getFilePreview(profileData.profilePhoto)}
                   alt={profileData.username}
-                  className="w-full h-full object-cover"
+                  onClick={() => setZoomedPhoto(true)}
+                  className="w-full h-full object-cover cursor-pointer"
                 />
               ) : (
                 <i className="fa-regular fa-circle-user text-5xl text-indigo-600 dark:text-gray-300"></i>
               )}
             </div>
+
+            {zoomedPhoto && (
+              <div
+                className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center cursor-pointer"
+                onClick={() => setZoomedPhoto(false)}
+              >
+                <img
+                  src={appwriteService.getFilePreview(profileData.profilePhoto)}
+                  className="max-w-[90vw] max-h-[90vh] object-contain rounded-xl"
+                />
+              </div>
+            )}
 
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-200">

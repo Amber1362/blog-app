@@ -7,7 +7,6 @@ import store from './store/store.js'
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
-import { AuthLayout } from './components/index.js'
 import AddPost from "./pages/AddPost";
 import Signup from './pages/Signup'
 import EditPost from "./pages/EditPost";
@@ -15,7 +14,7 @@ import Post from "./pages/Post";
 import AllPosts from "./pages/AllPosts";
 import ForgotPassword from './pages/ForgotPassword.jsx'
 import ResetPassword from './pages/ResetPassword.jsx'
-import {PrivacyPolicy, TermsAndConditions} from './components/index.js'
+import {PrivacyPolicy, TermsAndConditions, Features, AuthLayout, ContactSection} from './components/index.js'
 import Profile from './pages/Profile.jsx'
 import ProfileSetup from './pages/ProfileSetup.jsx'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -24,6 +23,8 @@ import EditProfile from './pages/EditProfile.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
+       <Route path='/contact' element={<ContactSection />} />
+       <Route path='/features' element={<Features />} />
        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
        <Route path='/terms-and-conditions' element={<TermsAndConditions />} />
        <Route index element={<Home />}/>

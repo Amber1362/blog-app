@@ -48,7 +48,7 @@ function Footer() {
                   <li className="mb-4">
                     <Link
                       className=" text-base font-medium text-gray-900 dark:text-gray-400 dark:hover:text-gray-500 hover:text-indigo-600"
-                      to="/"
+                      to="/features"
                     >
                       Features
                     </Link>
@@ -56,25 +56,9 @@ function Footer() {
                   <li className="mb-4">
                     <Link
                       className=" text-base font-medium text-gray-900 dark:text-gray-400 dark:hover:text-gray-500 hover:text-indigo-600"
-                      to="/"
+                      to="/contact"
                     >
-                      Pricing
-                    </Link>
-                  </li>
-                  <li className="mb-4">
-                    <Link
-                      className=" text-base font-medium text-gray-900 dark:text-gray-400 dark:hover:text-gray-500 hover:text-indigo-600"
-                      to="/"
-                    >
-                      Affiliate Program
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      className=" text-base font-medium text-gray-900 dark:text-gray-400 dark:hover:text-gray-500 hover:text-indigo-600"
-                      to="/"
-                    >
-                      Press Kit
+                      Contact
                     </Link>
                   </li>
                 </ul>

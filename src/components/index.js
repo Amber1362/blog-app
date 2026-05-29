@@ -16,6 +16,8 @@ import PostDate from "./Date";
 import Popup from "./Popup";
 import PrivacyPolicy from "./footer/PrivacyPolicy";
 import TermsAndConditions from "./footer/TermsAndConditions";
+import Features from "./footer/Features";
+import ContactSection from "./footer/Contact";
 
 export {
     Header,
@@ -35,5 +37,7 @@ export {
     PostDate,
     Popup,
     PrivacyPolicy,
-    TermsAndConditions
+    TermsAndConditions,
+    Features,
+    ContactSection
 }
