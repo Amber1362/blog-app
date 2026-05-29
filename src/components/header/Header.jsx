@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toggleTheme } from "../../store/themeSlice";
 import { FaSun, FaMoon, FaBars, FaTimes } from "react-icons/fa";
+import appwriteService from "../../appwrite/config";
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
@@ -25,7 +26,6 @@ function Header() {
     <header className="sticky top-0 z-50 py-3 shadow bg-white dark:bg-gray-900">
       <Container>
         <nav className="flex items-center">
-
           {/* Logo */}
           <div className="mr-4">
             <Link to="/">
@@ -47,7 +47,7 @@ function Header() {
                     <strong>{item.name}</strong>
                   </NavLink>
                 </li>
-              ) : null
+              ) : null,
             )}
           </ul>
 
@@ -55,15 +55,29 @@ function Header() {
           <ul className="hidden sm:flex items-center gap-2">
             {authStatus && userData && (
               <li>
-                <NavLink to={`/profile/${userData.username.toLowerCase().replace(/\s+/g, "-")}`}>
-                  <div className='w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold cursor-pointer hover:bg-indigo-700'>
-                    {userData.name.charAt(0).toUpperCase()}
-                  </div>
+                <NavLink
+                  to={`/profile/${userData.username.toLowerCase().replace(/\s+/g, "-")}`}
+                >
+                  {userData?.profilePhoto ? (
+                    <img
+                      src={appwriteService.getFilePreview(
+                        userData.profilePhoto,
+                      )}
+                      alt={userData.username}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold cursor-pointer hover:bg-indigo-700">
+                      {userData.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
                 </NavLink>
               </li>
             )}
             {authStatus && (
-              <li><LogoutBtn /></li>
+              <li>
+                <LogoutBtn />
+              </li>
             )}
             <li>
               <button
@@ -90,7 +104,6 @@ function Header() {
               {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
             </button>
           </div>
-
         </nav>
 
         {/* Mobile Menu — shows when hamburger clicked */}
@@ -110,7 +123,7 @@ function Header() {
                       {item.name}
                     </NavLink>
                   </li>
-                ) : null
+                ) : null,
               )}
               {authStatus && userData && (
                 <li>
@@ -131,7 +144,6 @@ function Header() {
             </ul>
           </div>
         )}
-
       </Container>
     </header>
   );
