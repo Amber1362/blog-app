@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,6 +7,7 @@ import usersService from "../appwrite/users";
 import { login } from "../store/authSlice";
 import toast from "react-hot-toast";
 import appwriteService from "../appwrite/config";
+import { FaPenToSquare } from "react-icons/fa6";
 
 function ProfileSetup({ profileDetails }) {
   const {
@@ -25,6 +26,14 @@ function ProfileSetup({ profileDetails }) {
   const userData = useSelector((state) => state.auth.userData);
   const dispatch = useDispatch();
 
+  const imageFile = watch("image");
+
+  const previewImage = imageFile?.[0]
+    ? URL.createObjectURL(imageFile[0])
+    : profileDetails?.profilePhoto
+      ? appwriteService.getFilePreview(profileDetails.profilePhoto)
+      : null;
+
   const bioValue = watch("bio", "");
 
   const submit = async (data) => {
@@ -39,10 +48,12 @@ function ProfileSetup({ profileDetails }) {
           await appwriteService.deleteFile(profileDetails.profilePhoto);
         }
 
+        const { image, ...profileData } = data;
+
         const updatedProfile = await usersService.updateUserProfile(
           profileDetails.$id,
           {
-            ...data,
+            ...profileData,
             profilePhoto: file ? file.$id : profileDetails.profilePhoto,
           },
         );
@@ -76,10 +87,12 @@ function ProfileSetup({ profileDetails }) {
 
         const profile = await usersService.getUserProfile(userData.$id);
 
+        const { image, ...profileData } = data;
+
         const updatedProfile = await usersService.updateUserProfile(
           profile.$id,
           {
-            ...data,
+            ...profileData,
             profilePhoto: file ? file.$id : profile?.profilePhoto,
             profileComplete: true,
           },
@@ -135,16 +148,42 @@ function ProfileSetup({ profileDetails }) {
             <div className="space-y-5">
               <div className="block">
                 <div className="block">
-                  <Input
-                    label="Profile Photo:"
-                    type="file"
-                    accept="image/png, image/jpeg, image/jpg"
-                    className="shadow-sm dark:bg-gray-600 dark:border-gray-600 dark:text-gray-200"
-                    {...register("image")}
-                  />
+                  <div className="flex justify-center">
+                    <div className="relative w-32 h-32">
+                      {/* Profile Image */}
+                      <div className="w-full h-full rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg bg-indigo-100 dark:bg-gray-600 flex items-center justify-center">
+                        {profileDetails?.profilePhoto ? (
+                          <img
+                            src={previewImage}
+                            alt={profileDetails.username}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <i className="fa-regular fa-circle-user text-7xl text-indigo-600 dark:text-gray-300"></i>
+                        )}
+                      </div>
+
+                      {/* Hidden File Input */}
+                      <input
+                        type="file"
+                        accept="image/png, image/jpeg, image/jpg"
+                        id="profilePhotoInput"
+                        className="hidden"
+                        {...register("image")}
+                      />
+
+                      {/* Pencil Button */}
+                      <label
+                        htmlFor="profilePhotoInput"
+                        className="absolute bottom-1 right-1 w-10 h-10 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white flex items-center justify-center cursor-pointer shadow-md border-2 border-white dark:border-gray-700 transition"
+                      >
+                        <FaPenToSquare className="text-sm" />
+                      </label>
+                    </div>
+                  </div>
                 </div>
 
-                {profileDetails?.profilePhoto && (
+                {/* {profileDetails?.profilePhoto && (
                   <img
                     src={appwriteService.getFilePreview(
                       profileDetails.profilePhoto,
@@ -152,7 +191,7 @@ function ProfileSetup({ profileDetails }) {
                     alt={profileDetails.username}
                     className="w-20 h-20 rounded-full object-cover mt-3"
                   />
-                )}
+                )} */}
 
                 <Input
                   label="Username:"
