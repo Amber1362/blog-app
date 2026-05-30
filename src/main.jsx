@@ -14,7 +14,7 @@ import Post from "./pages/Post";
 import AllPosts from "./pages/AllPosts";
 import ForgotPassword from './pages/ForgotPassword.jsx'
 import ResetPassword from './pages/ResetPassword.jsx'
-import {PrivacyPolicy, TermsAndConditions, Features, AuthLayout, ContactSection} from './components/index.js'
+import {PrivacyPolicy, TermsAndConditions, Features, AuthLayout, ContactSection, AboutVella, FAQ} from './components/index.js'
 import Profile from './pages/Profile.jsx'
 import ProfileSetup from './pages/ProfileSetup.jsx'
 import 'react-loading-skeleton/dist/skeleton.css'
@@ -23,6 +23,8 @@ import EditProfile from './pages/EditProfile.jsx'
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
+       <Route path='/faq' element={<FAQ />} />
+       <Route path='/about-vella' element={<AboutVella />} />
        <Route path='/contact' element={<ContactSection />} />
        <Route path='/features' element={<Features />} />
        <Route path='/privacy-policy' element={<PrivacyPolicy />} />

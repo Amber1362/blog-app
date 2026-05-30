@@ -18,6 +18,8 @@ import PrivacyPolicy from "./footer/PrivacyPolicy";
 import TermsAndConditions from "./footer/TermsAndConditions";
 import Features from "./footer/Features";
 import ContactSection from "./footer/Contact";
+import AboutVella from "./footer/AboutVella";
+import FAQ from "./footer/FAQ";
 
 export {
     Header,
@@ -39,5 +41,8 @@ export {
     PrivacyPolicy,
     TermsAndConditions,
     Features,
-    ContactSection
+    ContactSection,
+    AboutVella,
+    FAQ,
+    
 }
