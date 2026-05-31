@@ -33,7 +33,6 @@ function Home() {
       .getPosts([
         Query.limit(limit),
         Query.offset((page - 1) * limit),
-        Query.orderDesc("$createdAt"),
       ])
       .then(async (result) => {
         if (result) {
@@ -87,13 +86,7 @@ function Home() {
 
   return (
     <div className="relative w-full min-h-screen bg-gray-200 py-10 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
-      {/* Loading Overlay
-      {isLoading && (
-        <div className="absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex justify-center items-center cursor-not-allowed">
-          <Spinner />
-        </div>
-      )} */}
-
+      
       <Container>
         {authStatus ? (
           <>

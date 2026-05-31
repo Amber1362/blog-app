@@ -24,7 +24,6 @@ function AllPosts() {
       .getPosts([
         Query.limit(limit),
         Query.offset((page - 1) * limit),
-        Query.orderDesc("$createdAt"),
       ])
       .then(async (result) => {
         if (result) {

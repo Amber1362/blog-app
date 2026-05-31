@@ -87,28 +87,14 @@ function Footer() {
                     </Link>
                   </li>
                   <li className="mb-4">
-                    <Link
-                      className=" text-base font-medium text-gray-900 dark:text-gray-400 dark:hover:text-gray-500 hover:text-indigo-600"
-                      to="/"
+                    <a
+                      href="https://github.com/Amber1362/blog-app/issues/new"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-base font-medium text-gray-900 hover:text-indigo-600 dark:text-gray-400 dark:hover:text-gray-500"
                     >
-                      Help
-                    </Link>
-                  </li>
-                  <li className="mb-4">
-                    <Link
-                      className=" text-base font-medium text-gray-900 dark:text-gray-400 dark:hover:text-gray-500 hover:text-indigo-600"
-                      to="/"
-                    >
-                      Contact Us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      className=" text-base font-medium text-gray-900 dark:text-gray-400 dark:hover:text-gray-500 hover:text-indigo-600"
-                      to="/"
-                    >
-                      Customer Support
-                    </Link>
+                      Report a Bug
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -135,8 +121,7 @@ function Footer() {
                       Privacy Policy
                     </Link>
                   </li>
-                  <li>
-                  </li>
+                  <li></li>
                 </ul>
               </div>
             </div>

@@ -27,6 +27,7 @@ function ContactSection() {
             {/* Email */}
             <a
               href="mailto:ambersingh365@gmail.com"
+              rel="noopener noreferrer"
               className="flex items-center gap-3 px-6 py-4 rounded-2xl bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300"
             >
               <div className="w-11 h-11 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-lg">

@@ -167,7 +167,12 @@ function PrivacyPolicy() {
             contact us.
           </p>
 
-          <p className="mt-4 font-medium"><a href='mailto:ambersingh365@gmail.com'>ambersingh365@gmail.com</a></p>
+          <a
+            href="mailto:ambersingh365@gmail.com"
+            className="inline-block mt-3 text-indigo-600 dark:text-indigo-400 hover:underline"
+          >
+            ambersingh365@gmail.com
+          </a>
         </>
       ),
     },

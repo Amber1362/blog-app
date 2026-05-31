@@ -86,7 +86,7 @@ export class DatabaseService {
             return await this.database.listDocuments(
                 conf.appwriteDatabaseId,
                 conf.appwriteCollectionId,
-                [Query.equal('status', 'active'), ...queries],
+                [Query.equal('status', 'active'), Query.orderDesc("$createdAt"), ...queries],
             )
         } catch (error) {
             console.log('Appwrite service :: createPost :: error', error)
