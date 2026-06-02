@@ -7,6 +7,8 @@ import parse from "html-react-parser";
 import Spinner from "../components/Spinner";
 import toast from "react-hot-toast";
 import usersService from "../appwrite/users";
+import bookmarkService from "../appwrite/bookmark";
+import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 
 function Post() {
   const [post, setPost] = useState(null);
@@ -14,6 +16,8 @@ function Post() {
   const [isLoading, setIsLoading] = useState(false);
   const [spinner, setSpinner] = useState(false);
   const [author, setAuthor] = useState(null);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [bookmarkId, setBookmarkId] = useState(null);
 
   const userData = useSelector((state) => state.auth.userData);
 
@@ -40,6 +44,60 @@ function Post() {
         setSpinner(false);
       });
   }, [slug, navigate]);
+
+  useEffect(() => {
+    if (!userData || !post) return;
+
+    bookmarkService
+      .checkBookmark(userData.$id, post.$id)
+      .then((bookmark) => {
+        if(bookmark) {
+          setIsBookmarked(true);
+          setBookmarkId(bookmark.$id);
+        } else {
+          setIsBookmarked(false);
+          setBookmarkId(null);
+        }
+      })
+      .catch((error) => {
+        console.log("Bookmark check failed", error);
+      });
+  }, [userData, post]);
+
+  const handleBookmark = () => {
+    if (!isBookmarked) {
+      setIsBookmarked(true)
+      bookmarkService
+        .createBookmark({
+          userId: userData.$id,
+          postId: post.$id,
+        })
+        .then((bookmark) => {
+          // setIsBookmarked(true);
+          setBookmarkId(bookmark.$id);
+          toast.success('Post bookmarked')
+        })
+        .catch((error) => {
+          setIsBookmarked(false)
+          console.log(error);
+          toast.error("Failed to bookmark the post");
+        });
+    } else {
+      setIsBookmarked(false)
+      bookmarkService
+        .deleteBookmark(bookmarkId)
+        .then(() => {
+          // setIsBookmarked(false);
+          setBookmarkId(null);
+          toast.success('Bookmark removed')
+        })
+        .catch((error) => {
+          setIsBookmarked(true);
+          console.log(error);
+          toast.error("Failed to unsave the post");
+        });
+    }
+  };
 
   const isAuthor = post && userData ? post.userId === userData.$id : false;
 
@@ -164,6 +222,13 @@ function Post() {
               dateString={post.$createdAt}
             />
           </div>
+
+          <button
+            onClick={handleBookmark}
+            className="text-2xl text-indigo-500 hover:scale-110 transition"
+          >
+            {isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
+          </button>
 
           {/* Content */}
           <div className="bg-white dark:bg-gray-600 rounded-2xl shadow-md p-4 sm:p-8">
