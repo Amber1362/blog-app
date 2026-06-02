@@ -52,12 +52,16 @@ export class BookmarkService {
     }
   }
 
-  async getUserBookmarks(userId) {
+  async getUserBookmarks(userId, limit = 8, page = 1) {
     try {
       return await this.database.listDocuments(
         conf.appwriteDatabaseId,
         conf.appwriteBookmarkCollectionId,
-        [Query.equal("userId", userId)],
+        [
+          Query.equal("userId", userId),
+          Query.limit(limit),
+          Query.offset((page - 1) * limit),
+        ],
       );
     } catch (error) {
       console.log("Bookmark service :: getUserBookmarks :: error", error);

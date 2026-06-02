@@ -154,11 +154,22 @@ function Profile() {
               </div>
             </div>
 
-            <div>
+            <div className="flex gap-3">
               {isOwner && (
                 <Link to="/edit-profile">
                   <Button className="bg-indigo-600 hover:bg-indigo-700 text-white cursor-pointer">
                     Edit Profile
+                  </Button>
+                </Link>
+              )}
+              {isOwner && (
+                <Link to="/bookmarks">
+                  <Button
+                    bgColor="bg-gray-200 dark:bg-gray-600"
+                    textColor="text-gray-700"
+                    className="border border-gray-200 dark:border-gray-500 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500 cursor-pointer"
+                  >
+                    Bookmarks
                   </Button>
                 </Link>
               )}
