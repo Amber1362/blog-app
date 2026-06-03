@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import {Popup} from '../index'
 import toast from 'react-hot-toast';
 
-function LogoutBtn() {
+function LogoutBtn({ className = '' }) {
    const dispatch = useDispatch();
    const [popup, setPopup] = useState(false)
    const [isLoading, setIsLoading] = useState(false)
@@ -59,7 +59,13 @@ function LogoutBtn() {
   }
 
     <div>
-      <button disabled={isLoading} className='disabled:cursor-not-allowed disabled:opacity-50 inline-block px-4 py-2 duration-200 text-black dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-full font-bold hover:text-indigo-600 cursor-pointer' onClick={logoutHandler}>{isLoading ? <Spinner /> : 'Logout'}</button>
+      <button
+      disabled={isLoading}
+      className={`${className} disabled:cursor-not-allowed disabled:opacity-50`} 
+      onClick={logoutHandler}
+      >
+        {isLoading ? <Spinner /> : 'Logout'}
+      </button>
     </div>
 
   </>

@@ -1,10 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Container, Logo, LogoutBtn } from "../index";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toggleTheme } from "../../store/themeSlice";
-import { FaSun, FaMoon, FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaSun,
+  FaMoon,
+  FaBars,
+  FaTimes,
+  FaUser,
+  FaBookmark,
+  FaPlus,
+  FaSignOutAlt,
+  FaNewspaper,
+} from "react-icons/fa";
 import appwriteService from "../../appwrite/config";
 
 function Header() {
@@ -13,13 +23,25 @@ function Header() {
   const theme = useSelector((state) => state.theme.mode);
   const dispatch = useDispatch();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const navItems = [
     { name: "Home", slug: "/", active: true },
     { name: "Login", slug: "/login", active: !authStatus },
     { name: "Signup", slug: "/signup", active: !authStatus },
     { name: "All Posts", slug: "/all-posts", active: authStatus },
-    { name: "Add Post", slug: "/add-post", active: authStatus },
   ];
 
   return (
@@ -33,7 +55,7 @@ function Header() {
             </Link>
           </div>
 
-          {/* Desktop Nav — hidden on mobile */}
+          {/* Desktop Nav */}
           <ul className="hidden sm:flex flex-1 justify-center">
             {navItems.map((item) =>
               item.active ? (
@@ -51,12 +73,14 @@ function Header() {
             )}
           </ul>
 
-          {/* Desktop Right Side — hidden on mobile */}
+          {/* Desktop Right Side */}
           <ul className="hidden sm:flex items-center gap-2">
+            {/* Profile Dropdown */}
             {authStatus && userData && (
-              <li>
-                <NavLink
-                  to={`/profile/${userData.username.toLowerCase().replace(/\s+/g, "-")}`}
+              <li className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer duration-200"
                 >
                   {userData?.profilePhoto ? (
                     <img
@@ -67,18 +91,95 @@ function Header() {
                       className="w-8 h-8 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold cursor-pointer hover:bg-indigo-700">
+                    <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold">
                       {userData.name.charAt(0).toUpperCase()}
                     </div>
                   )}
-                </NavLink>
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                    {userData.name}
+                  </span>
+                  <span className="text-gray-400 text-xs">
+                    {dropdownOpen ? "▲" : "▼"}
+                  </span>
+                </button>
+
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <div className="absolute right-0 top-12 w-56 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 z-50 overflow-hidden">
+                    {/* User Info */}
+                    <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                      {userData?.profilePhoto ? (
+                        <img
+                          src={appwriteService.getFilePreview(
+                            userData.profilePhoto,
+                          )}
+                          alt={userData.username}
+                          className="w-10 h-10 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold">
+                          {userData.name.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+                          {userData.name}
+                        </p>
+                        <p className="text-xs text-gray-400 truncate w-32">
+                          {userData.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Links */}
+                    <div className="py-2">
+                      <Link
+                        to={`/profile/${userData.username}`}
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      >
+                        <FaNewspaper size={14} className="text-gray-400" />
+                        My Posts
+                      </Link>
+                      <Link
+                        to="/add-post"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      >
+                        <FaPlus size={14} className="text-gray-400" />
+                        Create Post
+                      </Link>
+                      <Link
+                        to={`/profile/${userData.username}`}
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      >
+                        <FaUser size={14} className="text-gray-400" />
+                        Profile
+                      </Link>
+                      <Link
+                        to="/bookmarks"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      >
+                        <FaBookmark size={14} className="text-gray-400" />
+                        Bookmarks
+                      </Link>
+                    </div>
+
+                    {/* Sign out */}
+                    <div
+                      className="border-t border-gray-100 dark:border-gray-700 py-2"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <LogoutBtn className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-gray-50 dark:hover:bg-gray-700 text-left" />
+                    </div>
+                  </div>
+                )}
               </li>
             )}
-            {authStatus && (
-              <li>
-                <LogoutBtn />
-              </li>
-            )}
+
+            {/* Theme Toggle */}
             <li>
               <button
                 onClick={() => dispatch(toggleTheme())}
@@ -106,7 +207,7 @@ function Header() {
           </div>
         </nav>
 
-        {/* Mobile Menu — shows when hamburger clicked */}
+        {/* Mobile Menu */}
         {menuOpen && (
           <div className="sm:hidden mt-3 pb-3 border-t border-gray-100 dark:border-gray-700">
             <ul className="flex flex-col">
@@ -126,20 +227,38 @@ function Header() {
                 ) : null,
               )}
               {authStatus && userData && (
-                <li>
-                  <NavLink
-                    to={`/profile/${userData.username.toLowerCase().replace(/\s+/g, "-")}`}
-                    onClick={() => setMenuOpen(false)}
-                    className="block px-4 py-3 text-black dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg font-medium"
-                  >
-                    Profile
-                  </NavLink>
-                </li>
-              )}
-              {authStatus && (
-                <li className="">
-                  <LogoutBtn />
-                </li>
+                <>
+                  <li>
+                    <Link
+                      to={`/profile/${userData.username}`}
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-4 py-3 text-black dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg font-medium"
+                    >
+                      My Posts
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/add-post"
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-4 py-3 text-black dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg font-medium"
+                    >
+                      Create Post
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/bookmarks"
+                      onClick={() => setMenuOpen(false)}
+                      className="block px-4 py-3 text-black dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg font-medium"
+                    >
+                      Bookmarks
+                    </Link>
+                  </li>
+                  <li onClick={() => setMenuOpen(false)}>
+                    <LogoutBtn className="block w-full text-left px-4 py-3 text-red-500 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg font-medium" />
+                  </li>
+                </>
               )}
             </ul>
           </div>
