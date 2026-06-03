@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Container, PostCard, Button } from "../components";
@@ -19,6 +19,12 @@ function Profile() {
   const [postToDelete, setPostToDelete] = useState(null);
   const [zoomedPhoto, setZoomedPhoto] = useState(false);
 
+  const limit = 8;
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const observerRef = useRef(null);
+  const loadMoreRef = useRef(null);
+
   const { username } = useParams();
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
@@ -33,17 +39,38 @@ function Profile() {
       .then((profile) => {
         if (profile) {
           setProfileData(profile);
-          // fetch this user's posts
           return appwriteService.getPosts([
             Query.equal("userId", profile.userId),
+            Query.limit(limit),
+            Query.offset((page - 1) * limit),
           ]);
         }
       })
       .then((posts) => {
-        if (posts) setPosts(posts.documents);
+        if (posts) {
+          setPosts((prev) => [...prev, ...posts.documents]);
+          setHasMore(posts.documents.length === limit);
+        }
       })
       .finally(() => setIsLoading(false));
-  }, [username]);
+  }, [username, page]);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1.0 },
+    );
+
+    if (loadMoreRef.current) {
+      observerRef.current.observe(loadMoreRef.current);
+    }
+
+    return () => observerRef.current?.disconnect();
+  }, [hasMore, isLoading]);
 
   const isOwner = userData?.$id === profileData?.userId;
 
@@ -183,9 +210,9 @@ function Profile() {
             My Posts
           </h2>
 
-          {isLoading ? (
+          {isLoading && page === 1 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[...Array(4)].map((_, i) => (
+              {[...Array(8)].map((_, i) => (
                 <PostCardSkeleton key={i} />
               ))}
             </div>
@@ -256,6 +283,20 @@ function Profile() {
             </div>
           )}
         </div>
+
+        <div ref={loadMoreRef} className="h-1" />
+
+        {isLoading && page > 1 && (
+          <div className="flex justify-center mt-6">
+            <Spinner />
+          </div>
+        )}
+
+        {!hasMore && posts.length > 0 && (
+          <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
+            You've reached the end.
+          </p>
+        )}
       </Container>
     </div>
   );
