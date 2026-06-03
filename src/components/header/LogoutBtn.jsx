@@ -1,75 +1,81 @@
-import React, {useState} from 'react'
-import { useDispatch } from 'react-redux'
-import  authService from '../../appwrite/auth'
-import {logout} from '../../store/authSlice'
-import Spinner from '../Spinner';
-import { useNavigate } from 'react-router-dom';
-import {Popup} from '../index'
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import authService from "../../appwrite/auth";
+import { logout } from "../../store/authSlice";
+import Spinner from "../Spinner";
+import { useNavigate } from "react-router-dom";
+import { Popup } from "../index";
+import toast from "react-hot-toast";
 
-function LogoutBtn({ className = '' }) {
-   const dispatch = useDispatch();
-   const [popup, setPopup] = useState(false)
-   const [isLoading, setIsLoading] = useState(false)
-   const navigate = useNavigate()
+function LogoutBtn({ className = "" }) {
+  const dispatch = useDispatch();
+  const [popup, setPopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-   const logoutHandler = () => {
-    setPopup(true)
-   }
+  const logoutHandler = () => {
+    setPopup(true);
+  };
 
   return (
-  <>
-  {popup && <Popup
-      para='Are you sure you want to logout?'
-      onConfirm={() => {
-        setIsLoading(true)
-        authService.logout()
-        .then(() => {
-          dispatch(logout())
-          toast.success('You are logged out.')
-          navigate('/')
-        })
-        .catch((error) => {
-          if(error.message.includes('Failed to fetch') || 
-               error.message.includes('Network')) {
-                toast.error('Network error. Please check your internet connection.', {
-                  id: 'logout-error'
-                })
-               } else {
-                toast.error('Something went wrong. Please try again.', {
-                    id: 'standard-error'
-                })
-               }
-        })
-        .finally(() => {
-          setIsLoading(false)
-          setPopup(false)
-        })
-      }}
+    <>
+      {popup && (
+        <Popup
+          para="Are you sure you want to logout?"
+          onConfirm={() => {
+            setIsLoading(true);
+            authService
+              .logout()
+              .then(() => {
+                dispatch(logout());
+                toast.success("You are logged out.");
+                navigate("/");
+              })
+              .catch((error) => {
+                if (
+                  error.message.includes("Failed to fetch") ||
+                  error.message.includes("Network")
+                ) {
+                  toast.error(
+                    "Network error. Please check your internet connection.",
+                    {
+                      id: "logout-error",
+                    },
+                  );
+                } else {
+                  toast.error("Something went wrong. Please try again.", {
+                    id: "standard-error",
+                  });
+                }
+              })
+              .finally(() => {
+                setIsLoading(false);
+                setPopup(false);
+              });
+          }}
+          onCancel={() => {
+            setPopup(false);
+          }}
+        />
+      )}
 
-      onCancel={() => {
-        setPopup(false)
-      }}
-  />}
+      {isLoading && (
+        <div className="z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center">
+          <Spinner />
+        </div>
+      )}
 
-  {isLoading && 
-    <div className='z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center'>
-            <Spinner />
-    </div>
-  }
-
-    <div>
-      <button
-      disabled={isLoading}
-      className={`${className} disabled:cursor-not-allowed disabled:opacity-50`} 
-      onClick={logoutHandler}
-      >
-        {isLoading ? <Spinner /> : 'Logout'}
-      </button>
-    </div>
-
-  </>
-  )
+      <div>
+        <button
+          disabled={isLoading}
+          className={`${className} disabled:cursor-not-allowed disabled:opacity-50`}
+          onClick={logoutHandler}
+        >
+          {isLoading ? <Spinner /> : "Logout"}
+        </button>
+      </div>
+    </>
+  );
 }
 
-export default LogoutBtn
+export default LogoutBtn;

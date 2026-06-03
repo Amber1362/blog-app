@@ -170,7 +170,6 @@ function Header() {
                     {/* Sign out */}
                     <div
                       className="border-t border-gray-100 dark:border-gray-700 py-2"
-                      onClick={() => setDropdownOpen(false)}
                     >
                       <LogoutBtn className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-gray-50 dark:hover:bg-gray-700 text-left" />
                     </div>
@@ -255,7 +254,7 @@ function Header() {
                       Bookmarks
                     </Link>
                   </li>
-                  <li onClick={() => setMenuOpen(false)}>
+                  <li>
                     <LogoutBtn className="block w-full text-left px-4 py-3 text-red-500 hover:bg-blue-100 dark:hover:bg-gray-700 rounded-lg font-medium" />
                   </li>
                 </>

@@ -43,6 +43,5 @@ export {
     Features,
     ContactSection,
     AboutVella,
-    FAQ,
-    
+    FAQ,   
 }
