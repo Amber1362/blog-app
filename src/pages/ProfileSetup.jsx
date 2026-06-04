@@ -47,9 +47,6 @@ function ProfileSetup({ profileDetails }) {
 
         if (file && profileDetails.profilePhoto) {
           await appwriteService.deleteFile(profileDetails.profilePhoto);
-        } else {
-          toast.error('Failed to update the profile photo')
-          return;
         }
 
         const { image, ...profileData } = data;
@@ -87,10 +84,7 @@ function ProfileSetup({ profileDetails }) {
         if (file) {
           const fileId = file.$id;
           data.profilePhoto = fileId;
-        } else {
-          toast.error('Failed to upload profile photo');
-          return;
-        }
+        } 
 
         const profile = await usersService.getUserProfile(userData.$id);
 
