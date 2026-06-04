@@ -51,6 +51,20 @@ export class LikeService {
       throw error;
     }
   }
+
+  async getPostLikesCount(postId) {
+    try {
+      const result = await this.database.listDocuments(
+        conf.appwriteDatabaseId,
+        conf.appwriteLikeCollectionId,
+        [Query.equal("postId", postId)],
+      );
+      return result.total;
+    } catch (error) {
+      console.log("Like service :: getPostLikesCount :: error", error);
+      throw error;
+    }
+  }
 }
 
 const likeService = new LikeService();

@@ -24,6 +24,7 @@ function Post() {
 
   const [isLiked, setIsLiked] = useState(false);
   const [likeId, setLikeId] = useState(null);
+  const [likesCount, setLikesCount] = useState(0);
 
   const userData = useSelector((state) => state.auth.userData);
 
@@ -106,6 +107,17 @@ function Post() {
   };
 
   useEffect(() => {
+    if (!post) return;
+
+    likeService
+      .getPostLikesCount(post.$id)
+      .then((count) => setLikesCount(count))
+      .catch((error) => {
+        handleError(error, "Failed to display likes count");
+      });
+  }, [post]);
+
+  useEffect(() => {
     if (!userData || !post) return;
 
     likeService
@@ -127,6 +139,7 @@ function Post() {
   const handleLike = () => {
     if (!isLiked) {
       setIsLiked(true);
+      setLikesCount((prev) => prev + 1);
 
       likeService
         .addLike({
@@ -143,6 +156,7 @@ function Post() {
         });
     } else {
       setIsLiked(false);
+      setLikesCount((prev) => prev - 1);
 
       likeService
         .removeLike(likeId)
@@ -275,6 +289,9 @@ function Post() {
             >
               {isLiked ? <FaHeart /> : <FaRegHeart />}
             </button>
+            <div className="text-sm text-gray-600 dark:text-gray-300">
+              {likesCount} likes
+            </div>
 
             {/* Bookmark Button */}
             <button

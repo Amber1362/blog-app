@@ -85,8 +85,7 @@ function FAQ() {
                 border border-gray-200 dark:border-gray-700
                 rounded-2xl
                 shadow-sm
-                hover:shadow-md
-                transition
+                hover:shadow-md hover:-translate-y-1 transition duration-300
                 overflow-hidden
               "
             >

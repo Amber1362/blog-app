@@ -22,8 +22,7 @@ function AboutVella() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* What is Vella */}
             <div
-              className="bg-white dark:bg-gray-700 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 shadow-md hover:shadow-xl transition duration-300
-  "
+              className="bg-white dark:bg-gray-700 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:shadow-md hover:-translate-y-1 transition duration-300"
             >
               <div className="flex items-center gap-3 mb-4">
                 <FaRocket className="text-indigo-600 text-xl" />
@@ -39,7 +38,7 @@ function AboutVella() {
             </div>
 
             {/* Why Build */}
-            <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 shadow-md hover:shadow-xl transition duration-300">
+            <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:shadow-md hover:-translate-y-1 transition duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <FaLightbulb className="text-indigo-600 text-xl" />
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
@@ -55,7 +54,7 @@ function AboutVella() {
             </div>
 
             {/* Tech Stack */}
-            <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 shadow-md hover:shadow-xl transition duration-300">
+            <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:shadow-md hover:-translate-y-1 transition duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <FaCode className="text-indigo-600 text-xl" />
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
@@ -74,7 +73,7 @@ function AboutVella() {
             </div>
 
             {/* Roadmap */}
-            <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 shadow-md hover:shadow-xl transition duration-300">
+            <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:shadow-md hover:-translate-y-1 transition duration-300">
               <div className="flex items-center gap-3 mb-4">
                 <FaRoad className="text-indigo-600 text-xl" />
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">

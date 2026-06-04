@@ -92,7 +92,6 @@ function Login() {
               Sign Up
             </Link>
           </p>
-          {/* {error && <p className='dark:text-red-400 text-red-500 mt-6 text-center text-sm font-semibold'>{error}</p>} */}
 
           <form onSubmit={handleSubmit(login)} className="mt-8">
             <div className="space-y-5">

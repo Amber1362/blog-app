@@ -176,7 +176,7 @@ function Home() {
 
             {/* Features Strip */}
             <div className="max-w-5xl mx-auto px-6 pb-16 sm:pb-20 grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
                 <p className="text-2xl mb-3">✍️</p>
                 <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-2">
                   Rich text editor
@@ -185,7 +185,7 @@ function Home() {
                   Write and format posts with a full-featured editor
                 </p>
               </div>
-              <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
                 <p className="text-2xl mb-3">🤖</p>
                 <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-2">
                   AI content helper
@@ -195,7 +195,7 @@ function Home() {
                   title
                 </p>
               </div>
-              <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-sm">
+              <div className="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-300">
                 <p className="text-2xl mb-3">🔒</p>
                 <h3 className="font-bold text-gray-800 dark:text-gray-200 mb-2">
                   Secure auth

@@ -66,7 +66,7 @@ function Features() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-md hover:shadow-xl transition duration-300 border border-gray-200 dark:border-gray-600"
+              className="bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-md hover:shadow-md hover:-translate-y-1 transition duration-300 border border-gray-200 dark:border-gray-600"
             >
               <div className="w-14 h-14 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-2xl mb-5">
                 {feature.icon}
