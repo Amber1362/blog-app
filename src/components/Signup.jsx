@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import usersService from "../appwrite/users";
+import handleError from "../utils/handleError";
 
 function Signup() {
   const navigate = useNavigate();
@@ -51,20 +52,7 @@ function Signup() {
         }
       }
     } catch (error) {
-      if (
-        error.message.includes("Failed to fetch") ||
-        error.message.includes("Network")
-      ) {
-        toast.error("Network error. Please check your internet connection.", {
-          id: "signup-network-error",
-        });
-      } else if (error.message.includes("already exists")) {
-        toast.error("Account already exists.");
-      } else {
-        toast.error("Something went wrong. Please try again.", {
-          id: "standard-error",
-        });
-      }
+      handleError(error, 'Failed to signup')
     } finally {
       setIsLoading(false);
     }

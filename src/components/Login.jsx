@@ -8,6 +8,7 @@ import authService from "../appwrite/auth";
 import toast from "react-hot-toast";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import usersService from "../appwrite/users";
+import handleError from "../utils/handleError";
 
 function Login() {
   const navigate = useNavigate();
@@ -60,22 +61,7 @@ function Login() {
         }
       }
     } catch (error) {
-      if (
-        error.message.includes("Failed to fetch") ||
-        error.message.includes("Network")
-      ) {
-        toast.error("Network error. Please check your internet connection.", {
-          id: "login-network-error",
-        });
-      } else if (error.message.includes("Invalid credentials")) {
-        toast.error("Invalid email or password.", {
-          id: "wrong-email-password",
-        });
-      } else {
-        toast.error("Something went wrong. Please try again.", {
-          id: "standard-error",
-        });
-      }
+      handleError(error, 'Failed to login')
     } finally {
       setIsLoading(false);
     }

@@ -6,6 +6,7 @@ import Spinner from "../Spinner";
 import { useNavigate } from "react-router-dom";
 import { Popup } from "../index";
 import toast from "react-hot-toast";
+import handleError from "../../utils/handleError";
 
 function LogoutBtn({ className = "" }) {
   const dispatch = useDispatch();
@@ -32,21 +33,7 @@ function LogoutBtn({ className = "" }) {
                 navigate("/");
               })
               .catch((error) => {
-                if (
-                  error.message.includes("Failed to fetch") ||
-                  error.message.includes("Network")
-                ) {
-                  toast.error(
-                    "Network error. Please check your internet connection.",
-                    {
-                      id: "logout-error",
-                    },
-                  );
-                } else {
-                  toast.error("Something went wrong. Please try again.", {
-                    id: "standard-error",
-                  });
-                }
+                handleError(error, 'Failed to logout')
               })
               .finally(() => {
                 setIsLoading(false);

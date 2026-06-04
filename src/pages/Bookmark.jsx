@@ -11,6 +11,7 @@ import appwriteService from "../appwrite/config";
 import { Container, PostCard } from "../components";
 
 import PostCardSkeleton from "../components/PostCardSkeleton";
+import handleError from "../utils/handleError";
 
 function BookmarkedPosts() {
   const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
@@ -44,7 +45,7 @@ function BookmarkedPosts() {
         setBookmarkedPosts((prev) => [...prev, ...posts.documents]);
         setHasMore(bookmarks.documents.length === limit);
       })
-      .catch(() => toast.error("Failed to load bookmarks"))
+      .catch((error) => handleError(error, "Failed to load bookmarks"))
       .finally(() => setIsLoading(false));
   }, [userData, page]);
 

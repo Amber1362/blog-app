@@ -8,6 +8,7 @@ import { login } from "../store/authSlice";
 import toast from "react-hot-toast";
 import appwriteService from "../appwrite/config";
 import { FaPenToSquare } from "react-icons/fa6";
+import handleError from "../utils/handleError";
 
 function ProfileSetup({ profileDetails }) {
   const {
@@ -46,6 +47,9 @@ function ProfileSetup({ profileDetails }) {
 
         if (file && profileDetails.profilePhoto) {
           await appwriteService.deleteFile(profileDetails.profilePhoto);
+        } else {
+          toast.error('Failed to update the profile photo')
+          return;
         }
 
         const { image, ...profileData } = data;
@@ -83,6 +87,9 @@ function ProfileSetup({ profileDetails }) {
         if (file) {
           const fileId = file.$id;
           data.profilePhoto = fileId;
+        } else {
+          toast.error('Failed to upload profile photo');
+          return;
         }
 
         const profile = await usersService.getUserProfile(userData.$id);
@@ -117,7 +124,7 @@ function ProfileSetup({ profileDetails }) {
         );
       }
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      handleError(error, 'Failed to complete profile setup')
     } finally {
       setIsLoading(false);
     }

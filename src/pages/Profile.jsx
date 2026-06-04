@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import PostCardSkeleton from "../components/PostCardSkeleton";
 import usersService from "../appwrite/users";
+import handleError from "../utils/handleError";
 
 function Profile() {
   const [posts, setPosts] = useState([]);
@@ -51,6 +52,9 @@ function Profile() {
           setPosts((prev) => [...prev, ...posts.documents]);
           setHasMore(posts.documents.length === limit);
         }
+      })
+      .catch((error) => {
+        handleError(error, 'Failed to load profile page')
       })
       .finally(() => setIsLoading(false));
   }, [username, page]);
@@ -95,19 +99,7 @@ function Profile() {
                 }
               })
               .catch((error) => {
-                if (
-                  error.message.includes("Failed to fetch") ||
-                  error.message.includes("Network")
-                ) {
-                  toast.error(
-                    "Network error. Please check your internet connection.",
-                    { id: "delete-error" },
-                  );
-                } else {
-                  toast.error("Something went wrong. Please try again.", {
-                    id: "standard-error",
-                  });
-                }
+                handleError(error, 'Failed to delete post')
               })
               .finally(() => setIsLoading(false));
           }}

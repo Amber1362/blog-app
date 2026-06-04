@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import PostCardSkeleton from "../components/PostCardSkeleton";
 import usersService from "../appwrite/users";
 import { Query } from "appwrite";
+import handleError from "../utils/handleError";
 
 function Home() {
   const [posts, setPosts] = useState([]);
@@ -30,11 +31,13 @@ function Home() {
     }
 
     appwriteService
-      .getPosts([
-        Query.limit(limit),
-        Query.offset((page - 1) * limit),
-      ])
+      .getPosts([Query.limit(limit), Query.offset((page - 1) * limit)])
       .then(async (result) => {
+        if (!result) {
+          toast.error("Failed to load posts");
+          return;
+        }
+
         if (result) {
           const posts = result.documents;
           const uniqueUserIds = [...new Set(posts.map((p) => p.userId))];
@@ -61,6 +64,9 @@ function Home() {
           setHasMore(posts.length === limit);
         }
       })
+      .catch((error) => {
+        handleError(error, "Failed to load home page");
+      })
       .finally(() => {
         setIsLoading(false);
       });
@@ -86,7 +92,6 @@ function Home() {
 
   return (
     <div className="relative w-full min-h-screen bg-gray-200 py-10 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
-      
       <Container>
         {authStatus ? (
           <>

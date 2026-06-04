@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import usersService from "../appwrite/users";
 import bookmarkService from "../appwrite/bookmark";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import handleError from "../utils/handleError";
 
 function Post() {
   const [post, setPost] = useState(null);
@@ -39,6 +40,9 @@ function Post() {
         } else {
           navigate("/");
         }
+      })
+      .catch((error) => {
+        handleError(error, 'Failed to load post')
       })
       .finally(() => {
         setSpinner(false);
@@ -79,7 +83,6 @@ function Post() {
         })
         .catch((error) => {
           setIsBookmarked(false)
-          console.log(error);
           toast.error("Failed to bookmark the post");
         });
     } else {
@@ -87,13 +90,11 @@ function Post() {
       bookmarkService
         .deleteBookmark(bookmarkId)
         .then(() => {
-          // setIsBookmarked(false);
           setBookmarkId(null);
           toast.success('Bookmark removed')
         })
         .catch((error) => {
           setIsBookmarked(true);
-          console.log(error);
           toast.error("Failed to unsave the post");
         });
     }
@@ -131,21 +132,7 @@ function Post() {
                 }
               })
               .catch((error) => {
-                if (
-                  error.message.includes("Failed to fetch") ||
-                  error.message.includes("Network")
-                ) {
-                  toast.error(
-                    "Network error. Please check your internet connection.",
-                    {
-                      id: "delete-error",
-                    },
-                  );
-                } else {
-                  toast.error("Something went wrong. Please try again.", {
-                    id: "standard-error",
-                  });
-                }
+                handleError(error, 'Failed to delete post')
               })
               .finally(() => {
                 setIsLoading(false);

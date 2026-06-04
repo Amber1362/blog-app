@@ -6,6 +6,7 @@ import { Query } from "appwrite";
 import { motion } from "framer-motion";
 import PostCardSkeleton from "../components/PostCardSkeleton";
 import usersService from "../appwrite/users";
+import handleError from "../utils/handleError";
 
 function AllPosts() {
   const [posts, setPosts] = useState([]);
@@ -21,11 +22,13 @@ function AllPosts() {
     setIsLoading(true);
 
     appwriteService
-      .getPosts([
-        Query.limit(limit),
-        Query.offset((page - 1) * limit),
-      ])
+      .getPosts([Query.limit(limit), Query.offset((page - 1) * limit)])
       .then(async (result) => {
+        if (!result) {
+          toast.error("Failed to load posts");
+          return;
+        }
+
         if (result) {
           const posts = result.documents;
           const uniqueUserIds = [...new Set(posts.map((p) => p.userId))];
@@ -52,6 +55,9 @@ function AllPosts() {
           setHasMore(posts.length === limit);
         }
       })
+      .catch((error) => {
+        handleError(error, 'Failed to load all posts page')
+      })
       .finally(() => {
         setIsLoading(false);
       });
@@ -59,11 +65,14 @@ function AllPosts() {
 
   // Intersection Observer
   useEffect(() => {
-    observerRef.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && hasMore && !isLoading) {
-        setPage((prev) => prev + 1);
-      }
-    }, {threshold: 1.0});
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 1.0 },
+    );
 
     if (loadMoreRef.current) {
       observerRef.current.observe(loadMoreRef.current);

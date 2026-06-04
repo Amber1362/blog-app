@@ -4,15 +4,14 @@ import { useForm } from 'react-hook-form'
 import authService from '../appwrite/auth'
 import { Link } from 'react-router-dom'
 import Spinner from '../components/Spinner'
+import handleError from '../utils/handleError'
 
 function ForgotPassword() {
-    const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
     const [isLoading, setIsLoading] = useState(false);
     const {register, handleSubmit, formState: { errors } } = useForm()
 
     const submit = async (data) => {
-        setError('')
         setIsLoading(true)
         const url = `${import.meta.env.VITE_APP_URL}/reset-password`
         console.log('URL:', import.meta.env.VITE_APP_URL)
@@ -23,7 +22,7 @@ function ForgotPassword() {
             })
             setSuccess(true)
         } catch (error) {
-            setError(error.message)
+            handleError(error, 'Failed to send recovery email')
         } finally {
             setIsLoading(false)
         }
