@@ -10,6 +10,8 @@ import usersService from "../appwrite/users";
 import bookmarkService from "../appwrite/bookmark";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import handleError from "../utils/handleError";
+import likeService from "../appwrite/like";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 function Post() {
   const [post, setPost] = useState(null);
@@ -19,6 +21,9 @@ function Post() {
   const [author, setAuthor] = useState(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkId, setBookmarkId] = useState(null);
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeId, setLikeId] = useState(null);
 
   const userData = useSelector((state) => state.auth.userData);
 
@@ -42,7 +47,7 @@ function Post() {
         }
       })
       .catch((error) => {
-        handleError(error, 'Failed to load post')
+        handleError(error, "Failed to load post");
       })
       .finally(() => {
         setSpinner(false);
@@ -55,7 +60,7 @@ function Post() {
     bookmarkService
       .checkBookmark(userData.$id, post.$id)
       .then((bookmark) => {
-        if(bookmark) {
+        if (bookmark) {
           setIsBookmarked(true);
           setBookmarkId(bookmark.$id);
         } else {
@@ -70,7 +75,7 @@ function Post() {
 
   const handleBookmark = () => {
     if (!isBookmarked) {
-      setIsBookmarked(true)
+      setIsBookmarked(true);
       bookmarkService
         .createBookmark({
           userId: userData.$id,
@@ -79,23 +84,75 @@ function Post() {
         .then((bookmark) => {
           // setIsBookmarked(true);
           setBookmarkId(bookmark.$id);
-          toast.success('Post bookmarked')
+          toast.success("Post bookmarked");
         })
         .catch((error) => {
-          setIsBookmarked(false)
+          setIsBookmarked(false);
           toast.error("Failed to bookmark the post");
         });
     } else {
-      setIsBookmarked(false)
+      setIsBookmarked(false);
       bookmarkService
         .deleteBookmark(bookmarkId)
         .then(() => {
           setBookmarkId(null);
-          toast.success('Bookmark removed')
+          toast.success("Bookmark removed");
         })
         .catch((error) => {
           setIsBookmarked(true);
           toast.error("Failed to unsave the post");
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (!userData || !post) return;
+
+    likeService
+      .checkLike(userData.$id, post.$id)
+      .then((like) => {
+        if (like) {
+          setIsLiked(true);
+          setLikeId(like.$id);
+        } else {
+          setIsLiked(false);
+          setLikeId(null);
+        }
+      })
+      .catch((error) => {
+        console.log("Like check failed", error);
+      });
+  }, [userData, post]);
+
+  const handleLike = () => {
+    if (!isLiked) {
+      setIsLiked(true);
+
+      likeService
+        .addLike({
+          userId: userData.$id,
+          postId: post.$id,
+        })
+        .then((like) => {
+          setLikeId(like.$id);
+          toast.success("Post liked");
+        })
+        .catch((error) => {
+          setIsLiked(false);
+          toast.error("Failed to like the post");
+        });
+    } else {
+      setIsLiked(false);
+
+      likeService
+        .removeLike(likeId)
+        .then(() => {
+          setLikeId(null);
+          toast.success("Like removed");
+        })
+        .catch((error) => {
+          setIsLiked(true);
+          toast.error("Failed to unlike the post");
         });
     }
   };
@@ -132,7 +189,7 @@ function Post() {
                 }
               })
               .catch((error) => {
-                handleError(error, 'Failed to delete post')
+                handleError(error, "Failed to delete post");
               })
               .finally(() => {
                 setIsLoading(false);
@@ -210,12 +267,23 @@ function Post() {
             />
           </div>
 
-          <button
-            onClick={handleBookmark}
-            className="text-2xl text-indigo-500 hover:scale-110 transition"
-          >
-            {isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
-          </button>
+          <div className="flex items-center gap-4 mt-2">
+            {/* Like Button */}
+            <button
+              onClick={handleLike}
+              className="text-2xl text-red-500 hover:scale-110 transition"
+            >
+              {isLiked ? <FaHeart /> : <FaRegHeart />}
+            </button>
+
+            {/* Bookmark Button */}
+            <button
+              onClick={handleBookmark}
+              className="text-2xl text-indigo-500 hover:scale-110 transition"
+            >
+              {isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
+            </button>
+          </div>
 
           {/* Content */}
           <div className="bg-white dark:bg-gray-600 rounded-2xl shadow-md p-4 sm:p-8">
