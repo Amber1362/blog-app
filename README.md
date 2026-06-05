@@ -12,16 +12,16 @@ https://blog-app-4iu2.vercel.app
 ![Landing Page](./screenshots/landing-page.png)
 
 ### Home Feed
-![Home Feed](./screenshots/home-feed.png)
+![Home Feed](./screenshots/updated-home-feed.png)
 
 ### Create Post
-![Create Post](./screenshots/create-post.png)
+![Create Post](./screenshots/updated-create-post.png)
 
 ### AI Content Generation
 ![AI Content Generation](./screenshots/ai-generation.png)
 
 ### Profile Page
-![Profile Page](./screenshots/profile-page.png)
+![Profile Page](./screenshots/updated-profile-page.png)
 
 ## Features
 
@@ -42,6 +42,8 @@ https://blog-app-4iu2.vercel.app
 * SEO-friendly slug-based URLs
 * Automatic read time estimation
 * Relative date formatting (Today, Yesterday, X minutes ago)
+* Like Posts
+* Bookmark Posts
 
 ### AI Writing Assistant
 
@@ -167,8 +169,7 @@ src/
 
 * User follow system
 * Comments and replies
-* Post bookmarking
-* Post likes and reactions
+* Post reactions
 * Email notifications
 * Rich profile customization
 * Trending posts section
