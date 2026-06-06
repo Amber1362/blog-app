@@ -1,83 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
-import appwriteService from "../appwrite/config";
 import { Container, PostCard, Button } from "../components";
 import { useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import PostCardSkeleton from "../components/PostCardSkeleton";
-import usersService from "../appwrite/users";
-import { Query } from "appwrite";
 import handleError from "../utils/handleError";
+import { useInfinitePosts } from "../hooks/usePosts";
 
 function Home() {
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const user_data = useSelector((state) => state.auth.userData);
-  const limit = 8;
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
   const authStatus = useSelector((state) => state.auth.status);
 
-  useEffect(() => {
-    setIsLoading(true);
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfinitePosts();
+    console.log(data)
 
-    if (!authStatus) {
-      setIsLoading(false);
-      return;
-    }
-
-    appwriteService
-      .getPosts([Query.limit(limit), Query.offset((page - 1) * limit)])
-      .then(async (result) => {
-        if (!result) {
-          toast.error("Failed to load posts");
-          return;
-        }
-
-        if (result) {
-          const posts = result.documents;
-          const uniqueUserIds = [...new Set(posts.map((p) => p.userId))];
-
-          if (uniqueUserIds.length === 0) {
-            setPosts((prev) => [...prev, ...posts]);
-            setHasMore(posts.length === limit);
-            return;
-          }
-
-          const authorsResult = await usersService.getUsersByIds(uniqueUserIds);
-
-          const authorMap = {};
-          authorsResult.documents.forEach((author) => {
-            authorMap[author.userId] = author;
-          });
-
-          const postsWithAuthor = posts.map((post) => ({
-            ...post,
-            author: authorMap[post.userId] || null,
-          }));
-
-          setPosts((prev) => [...prev, ...postsWithAuthor]);
-          setHasMore(posts.length === limit);
-        }
-      })
-      .catch((error) => {
-        handleError(error, "Failed to load home page");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [authStatus, page]);
+  const posts = data?.pages.flatMap((page) => page.posts) || [];
 
   // Intersection Observer
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isLoading) {
-          setPage((prev) => prev + 1);
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
         }
       },
       { threshold: 1.0 },
@@ -88,7 +36,7 @@ function Home() {
     }
 
     return () => observerRef.current?.disconnect();
-  }, [hasMore, isLoading]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div className="relative w-full min-h-screen bg-gray-200 py-10 dark:bg-gray-800 dark:border-gray-700 dark:text-white">
@@ -103,7 +51,7 @@ function Home() {
                 Discover stories, ideas, and shared experiences
               </p>
             </div>
-            {isLoading && page === 1 ? (
+            {isLoading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {[...Array(8)].map((_, i) => (
                   <PostCardSkeleton key={i} />
@@ -128,7 +76,7 @@ function Home() {
             <div ref={loadMoreRef} className="h-1" />
 
             {/* No more posts */}
-            {!hasMore && !isLoading && (
+            {!hasNextPage && !isLoading && (
               <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
                 You've reached the end.
               </p>
