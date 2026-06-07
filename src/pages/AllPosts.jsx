@@ -1,74 +1,31 @@
 import React, { useState, useEffect, useRef } from "react";
-import appwriteService from "../appwrite/config";
 import { Container, PostCard, Input } from "../components";
-import Spinner from "../components/Spinner";
-import { Query } from "appwrite";
 import { motion } from "framer-motion";
 import PostCardSkeleton from "../components/PostCardSkeleton";
-import usersService from "../appwrite/users";
-import handleError from "../utils/handleError";
+import { useInfinitePosts } from "../hooks/usePosts";
 
 function AllPosts() {
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const limit = 8;
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
-  useEffect(() => {
-    setIsLoading(true);
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfinitePosts();
 
-    appwriteService
-      .getPosts([Query.limit(limit), Query.offset((page - 1) * limit)])
-      .then(async (result) => {
-        if (!result) {
-          toast.error("Failed to load posts");
-          return;
-        }
-
-        if (result) {
-          const posts = result.documents;
-          const uniqueUserIds = [...new Set(posts.map((p) => p.userId))];
-
-          if (uniqueUserIds.length === 0) {
-            setPosts((prev) => [...prev, ...posts]);
-            setHasMore(posts.length === limit);
-            return;
-          }
-
-          const authorsResult = await usersService.getUsersByIds(uniqueUserIds);
-
-          const authorMap = {};
-          authorsResult.documents.forEach((author) => {
-            authorMap[author.userId] = author;
-          });
-
-          const postsWithAuthor = posts.map((post) => ({
-            ...post,
-            author: authorMap[post.userId] || null,
-          }));
-
-          setPosts((prev) => [...prev, ...postsWithAuthor]);
-          setHasMore(posts.length === limit);
-        }
-      })
-      .catch((error) => {
-        handleError(error, 'Failed to load all posts page')
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [page]);
+  const posts = data?.pages.flatMap((page) => page.posts) || [];
 
   // Intersection Observer
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isLoading) {
-          setPage((prev) => prev + 1);
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
         }
       },
       { threshold: 1.0 },
@@ -79,7 +36,7 @@ function AllPosts() {
     }
 
     return () => observerRef.current?.disconnect();
-  }, [hasMore, isLoading]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const searchPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -117,14 +74,8 @@ function AllPosts() {
           </p>
         )}
 
-        {/* Loading indicator at bottom */}
-        {isLoading && page > 1 && (
-          <div className="flex justify-center mt-6">
-            <Spinner />
-          </div>
-        )}
-
-        {isLoading && page === 1 ? (
+        {/* Initial loading */}
+        {isLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(8)].map((_, i) => (
               <PostCardSkeleton key={i} />
@@ -152,11 +103,18 @@ function AllPosts() {
           </div>
         )}
 
-        {/* Intersection Observer trigger point */}
+        {/* Infinite scroll trigger */}
         <div ref={loadMoreRef} className="h-1" />
 
-        {/* No more posts */}
-        {!hasMore && !isLoading && (
+        {/* Fetching next page */}
+        {isFetchingNextPage && (
+          <div className="flex justify-center mt-6">
+            <PostCardSkeleton />
+          </div>
+        )}
+
+        {/* End message */}
+        {!hasNextPage && !isLoading && (
           <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
             You've reached the end.
           </p>
