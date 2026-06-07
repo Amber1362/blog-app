@@ -1,59 +1,35 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useInfiniteBookmarks } from "../hooks/useBookmarks";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import { Query } from "appwrite";
 import { motion } from "framer-motion";
-import toast from "react-hot-toast";
 import Spinner from "../components/Spinner";
-
-import bookmarkService from "../appwrite/bookmark";
-import appwriteService from "../appwrite/config";
-
 import { Container, PostCard } from "../components";
-
 import PostCardSkeleton from "../components/PostCardSkeleton";
-import handleError from "../utils/handleError";
 
 function BookmarkedPosts() {
-  const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const limit = 8;
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
   const userData = useSelector((state) => state.auth.userData);
 
-  useEffect(() => {
-    if (!userData) return;
-    setIsLoading(true);
+  const {
+    data,
+    isLoading,
+    error,
+    isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteBookmarks(userData?.$id);
 
-    bookmarkService
-      .getUserBookmarks(userData.$id, limit, page)
-      .then(async (bookmarks) => {
-        if (bookmarks.documents.length === 0) {
-          setHasMore(false);
-          return;
-        }
-
-        const postIds = bookmarks.documents.map((b) => b.postId);
-        const posts = await appwriteService.getPosts([
-          Query.equal("$id", postIds),
-        ]);
-
-        setBookmarkedPosts((prev) => [...prev, ...posts.documents]);
-        setHasMore(bookmarks.documents.length === limit);
-      })
-      .catch((error) => handleError(error, "Failed to load bookmarks"))
-      .finally(() => setIsLoading(false));
-  }, [userData, page]);
+  const bookmarkedPosts = data?.pages.flatMap((page) => page.posts) || [];
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isLoading) {
-          setPage((prev) => prev + 1);
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
         }
       },
       { threshold: 1.0 },
@@ -64,7 +40,7 @@ function BookmarkedPosts() {
     }
 
     return () => observerRef.current?.disconnect();
-  }, [hasMore, isLoading]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <div className="w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
@@ -98,6 +74,7 @@ function BookmarkedPosts() {
                     featuredImage={post.featuredImage}
                     $createdAt={post.$createdAt}
                     content={post.content}
+                    author={post.author}
                   />
                 </motion.div>
               ))}
@@ -117,14 +94,14 @@ function BookmarkedPosts() {
 
         <div ref={loadMoreRef} className="h-1" />
 
-        {isLoading && page > 1 && (
+        {isFetchingNextPage && (
           <div className="flex justify-center mt-6">
             <Spinner />
           </div>
         )}
 
-        {!hasMore && bookmarkedPosts.length > 0 && (
-          <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
+        {bookmarkedPosts.length > 0 && !hasNextPage && !isLoading && (
+          <p className="text-center text-gray-500 mt-6">
             You've reached the end.
           </p>
         )}
