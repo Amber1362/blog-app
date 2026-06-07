@@ -15,51 +15,55 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme.mode);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLoading(true)
+    setIsLoading(true);
     authService
-        .getCurrentUser()
-        .then((userData) => {
-            if(userData) {
-                return usersService.getUserProfile(userData.$id)
-                    .then(async (profile) => {
-                        if(!profile) {
-                            // new user (Google OAuth or legacy) — create profile
-                            profile = await usersService.createUserProfile({
-                                userId: userData.$id,
-                                name: userData.name,
-                            })
-                        }
-                        dispatch(login({
-                            userData: {
-                                $id: userData.$id,
-                                name: userData.name,
-                                email: userData.email,
-                                profilePhoto: profile?.profilePhoto || null,
-                                username: profile?.username || '',
-                                bio: profile?.bio || '',
-                                profileComplete: profile?.profileComplete || false,
-                            }
-                        }))
-                        if(!profile?.profileComplete) {
-                            navigate('/profile-setup')
-                            return
-                        }
-                    })
-            } else {
-                dispatch(logout())
+      .getCurrentUser()
+      .then((userData) => {
+        if (!userData) {
+          dispatch(logout());
+          return;
+        }
+
+        return usersService
+          .getUserProfile(userData.$id)
+          .then(async (profile) => {
+            if (!profile) {
+              // new user (Google OAuth or legacy) — create profile
+              profile = await usersService.createUserProfile({
+                userId: userData.$id,
+                name: userData.name,
+              });
             }
-        })
-        .catch(() => {
-            dispatch(logout())
-        })
-        .finally(() => {
-            dispatch(setLoading(false))
-            setIsLoading(false)
-        })
-}, [])
+            dispatch(
+              login({
+                userData: {
+                  $id: userData.$id,
+                  name: userData.name,
+                  email: userData.email,
+                  profilePhoto: profile?.profilePhoto || null,
+                  username: profile?.username || "",
+                  bio: profile?.bio || "",
+                  profileComplete: profile?.profileComplete || false,
+                },
+              }),
+            );
+            if (!profile?.profileComplete) {
+              navigate("/profile-setup");
+              return;
+            }
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() => {
+        dispatch(setLoading(false));
+        setIsLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     const root = document.body;
