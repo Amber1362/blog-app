@@ -13,9 +13,12 @@ function AllPosts() {
   const {
     data,
     isLoading,
+    error,
+    isError,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
   } = useInfinitePosts();
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
@@ -41,6 +44,36 @@ function AllPosts() {
   const searchPosts = posts.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+  // Error UI
+  if (isError) {
+    return (
+      <div className="relative w-full min-h-screen bg-gray-200 py-10 dark:bg-gray-800 dark:text-white">
+        <Container>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <p className="text-5xl mb-4">⚠️</p>
+
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+              Something went wrong
+            </h2>
+
+            <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
+              {error?.message?.includes("Failed to fetch")
+                ? "No internet connection. Please check your network."
+                : "Failed to load posts. Please try again."}
+            </p>
+
+            <button
+              onClick={() => refetch()}
+              className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg cursor-pointer"
+            >
+              Try Again
+            </button>
+          </div>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
