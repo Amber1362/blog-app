@@ -11,6 +11,8 @@ import { motion } from "framer-motion";
 import PostCardSkeleton from "../components/PostCardSkeleton";
 import usersService from "../appwrite/users";
 import handleError from "../utils/handleError";
+import { useProfile } from "../hooks/useProfile";
+import { useInfiniteUserPosts } from "../hooks/useInfiniteUserPosts";
 
 function Profile() {
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -66,6 +68,76 @@ function Profile() {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const isOwner = userData?.$id === profileData?.userId;
+
+  if (isProfileLoading) {
+    return (
+      <div className="w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
+        <Container>
+          <div className="flex justify-center py-20">
+            <Spinner />
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
+  if (isProfileError) {
+    return (
+      <div className="w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
+        <Container>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <p className="text-5xl mb-4">⚠️</p>
+
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+              Failed to load profile
+            </h2>
+
+            <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
+              {profileError?.message?.includes("Failed to fetch")
+                ? "No internet connection. Please check your network."
+                : "Unable to load this profile. Please try again."}
+            </p>
+
+            <button
+              onClick={() => refetchProfile()}
+              className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg cursor-pointer"
+            >
+              Try Again
+            </button>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
+        <Container>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <p className="text-5xl mb-4">⚠️</p>
+
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+              Failed to load posts
+            </h2>
+
+            <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
+              {error?.message?.includes("Failed to fetch")
+                ? "No internet connection. Please check your network."
+                : "Unable to load posts. Please try again."}
+            </p>
+
+            <button
+              onClick={() => refetch()}
+              className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg cursor-pointer"
+            >
+              Try Again
+            </button>
+          </div>
+        </Container>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
@@ -212,6 +284,7 @@ function Profile() {
                     featuredImage={post.featuredImage}
                     $createdAt={post.$createdAt}
                     content={post.content}
+                    author={post.author}
                     showAction={isOwner}
                     isMenuOpen={openMenuId === post.$id}
                     onMenuToggle={(e) => {
