@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import PostCardSkeleton from "../components/PostCardSkeleton";
 import handleError from "../utils/handleError";
-import { useInfinitePosts } from "../hooks/usePosts";
+import { useInfinitePosts } from "../hooks/useInfinitePosts";
 
 function Home() {
   const observerRef = useRef(null);

@@ -1,4 +1,4 @@
-import { useInfiniteBookmarks } from "../hooks/useBookmarks";
+import { useInfiniteBookmarks } from "../hooks/useInfiniteBookmarks";
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { motion } from "framer-motion";

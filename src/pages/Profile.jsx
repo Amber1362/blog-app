@@ -13,57 +13,46 @@ import usersService from "../appwrite/users";
 import handleError from "../utils/handleError";
 
 function Profile() {
-  const [posts, setPosts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [popup, setPopup] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
   const [zoomedPhoto, setZoomedPhoto] = useState(false);
 
-  const limit = 8;
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
 
   const { username } = useParams();
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
-  const [profileData, setProfileData] = useState(null);
 
-  useEffect(() => {
-    if (!username) return;
-    setIsLoading(true);
+  //Profile fetching
+  const {
+    data: profileData,
+    isLoading: isProfileLoading,
+    isError: isProfileError,
+    error: profileError,
+    refetch: refetchProfile,
+  } = useProfile(username);
 
-    usersService
-      .getUserByUsername(username)
-      .then((profile) => {
-        if (profile) {
-          setProfileData(profile);
-          return appwriteService.getPosts([
-            Query.equal("userId", profile.userId),
-            Query.limit(limit),
-            Query.offset((page - 1) * limit),
-          ]);
-        }
-      })
-      .then((posts) => {
-        if (posts) {
-          setPosts((prev) => [...prev, ...posts.documents]);
-          setHasMore(posts.documents.length === limit);
-        }
-      })
-      .catch((error) => {
-        handleError(error, 'Failed to load profile page')
-      })
-      .finally(() => setIsLoading(false));
-  }, [username, page]);
+  //User Profile Posts fetching
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteUserPosts(profileData?.userId);
+
+  const posts = data?.pages.flatMap((page) => page.posts) || [];
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isLoading) {
-          setPage((prev) => prev + 1);
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
         }
       },
       { threshold: 1.0 },
@@ -74,7 +63,7 @@ function Profile() {
     }
 
     return () => observerRef.current?.disconnect();
-  }, [hasMore, isLoading]);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const isOwner = userData?.$id === profileData?.userId;
 
@@ -99,7 +88,7 @@ function Profile() {
                 }
               })
               .catch((error) => {
-                handleError(error, 'Failed to delete post')
+                handleError(error, "Failed to delete post");
               })
               .finally(() => setIsLoading(false));
           }}
@@ -202,7 +191,7 @@ function Profile() {
             My Posts
           </h2>
 
-          {isLoading && page === 1 ? (
+          {isLoading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
                 <PostCardSkeleton key={i} />
@@ -278,13 +267,13 @@ function Profile() {
 
         <div ref={loadMoreRef} className="h-1" />
 
-        {isLoading && page > 1 && (
+        {isFetchingNextPage && (
           <div className="flex justify-center mt-6">
             <Spinner />
           </div>
         )}
 
-        {!hasMore && posts.length > 0 && (
+        {!hasNextPage && posts.length > 0 && (
           <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
             You've reached the end.
           </p>

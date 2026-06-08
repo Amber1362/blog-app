@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Container, PostCard, Input } from "../components";
 import { motion } from "framer-motion";
 import PostCardSkeleton from "../components/PostCardSkeleton";
-import { useInfinitePosts } from "../hooks/usePosts";
+import { useInfinitePosts } from "../hooks/useInfinitePosts";
 
 function AllPosts() {
   const [searchQuery, setSearchQuery] = useState("");
