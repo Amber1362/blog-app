@@ -13,6 +13,7 @@ import usersService from "../appwrite/users";
 import handleError from "../utils/handleError";
 import { useProfile } from "../hooks/useProfile";
 import { useInfiniteUserPosts } from "../hooks/useInfiniteUserPosts";
+import { useDeletePost } from "../hooks/useDeletePost";
 
 function Profile() {
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -26,6 +27,8 @@ function Profile() {
   const { username } = useParams();
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
+
+  const deletePostMutation = useDeletePost();
 
   //Profile fetching
   const {
@@ -145,24 +148,11 @@ function Profile() {
         <Popup
           para="Are you sure you want to delete this post?"
           onConfirm={() => {
-            setIsLoading(true);
-            appwriteService
-              .deletePost(postToDelete.$id)
-              .then((status) => {
-                if (status) {
-                  appwriteService.deleteFile(postToDelete.featuredImage);
-                  setPosts((prev) =>
-                    prev.filter((p) => p.$id !== postToDelete.$id),
-                  );
-                  toast.success("Post deleted successfully!");
-                  setPostToDelete(null);
-                  setPopup(false);
-                }
-              })
-              .catch((error) => {
-                handleError(error, "Failed to delete post");
-              })
-              .finally(() => setIsLoading(false));
+            if (deletePostMutation.isPending) return;
+            
+            deletePostMutation.mutate(postToDelete);
+            setPopup(false);
+            setPostToDelete(null);
           }}
           onCancel={() => {
             setPopup(false);
