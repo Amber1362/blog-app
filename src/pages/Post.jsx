@@ -12,6 +12,7 @@ import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import handleError from "../utils/handleError";
 import likeService from "../appwrite/like";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { useDeletePost } from "../hooks/useDeletePost";
 
 function Post() {
   const [post, setPost] = useState(null);
@@ -27,6 +28,7 @@ function Post() {
   const [likesCount, setLikesCount] = useState(0);
 
   const userData = useSelector((state) => state.auth.userData);
+  const deletePostMutation = useDeletePost();
 
   const navigate = useNavigate();
   const { slug } = useParams();
@@ -191,26 +193,19 @@ function Post() {
         <Popup
           para="Are you sure you want to delete this post?"
           onConfirm={() => {
-            setIsLoading(true);
+            if (deletePostMutation.isPending) return;
 
-            appwriteService
-              .deletePost(post.$id)
-              .then((status) => {
-                if (status) {
-                  appwriteService.deleteFile(post.featuredImage);
-                  toast.success("Post deleted successfully!");
-                  navigate("/");
-                }
-              })
-              .catch((error) => {
-                handleError(error, "Failed to delete post");
-              })
-              .finally(() => {
-                setIsLoading(false);
+            deletePostMutation.mutate(post, {
+              onSuccess: () => {
                 setPopup(false);
-              });
+                navigate("/");
+              },
+            });
           }}
+          isLoading={deletePostMutation.isPending}
           onCancel={() => {
+            if (deletePostMutation.isPending) return;
+
             setPopup(false);
           }}
         />
@@ -248,7 +243,7 @@ function Post() {
                 </Link>
 
                 <Button
-                  isLoading={isLoading}
+                  isLoading={deletePostMutation.isPending}
                   bgColor="bg-red-500"
                   className="hover:bg-red-600 cursor-pointer text-sm sm:text-base px-3 sm:px-4"
                   onClick={deletePost}

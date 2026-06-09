@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Logo } from './index'
 
-function Popup({ para, onConfirm, onCancel }) {
+function Popup({ para, onConfirm, onCancel, isLoading = false }) {
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4'>
       <div className='w-full max-w-sm bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl'>
@@ -22,6 +22,7 @@ function Popup({ para, onConfirm, onCancel }) {
           </Button>
           <Button
             onClick={onConfirm}
+            isLoading={isLoading}
             className='hover:bg-indigo-700 cursor-pointer'>
             Yes
           </Button>
