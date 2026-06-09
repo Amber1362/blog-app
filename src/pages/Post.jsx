@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import parse from "html-react-parser";
 import Spinner from "../components/Spinner";
 import toast from "react-hot-toast";
-import usersService from "../appwrite/users";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import handleError from "../utils/handleError";
 import likeService from "../appwrite/like";
@@ -14,14 +13,10 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useDeletePost } from "../hooks/useDeletePost";
 import { useBookmarkStatus } from "../hooks/useBookmarkStatus";
 import { useToggleBookmark } from "../hooks/useToggleBookmark";
+import { usePost } from "../hooks/usePost";
 
 function Post() {
-  const [post, setPost] = useState(null);
   const [popup, setPopup] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [spinner, setSpinner] = useState(false);
-  const [author, setAuthor] = useState(null);
-
   const [isLiked, setIsLiked] = useState(false);
   const [likeId, setLikeId] = useState(null);
   const [likesCount, setLikesCount] = useState(0);
@@ -33,37 +28,17 @@ function Post() {
   const navigate = useNavigate();
   const { slug } = useParams();
 
+  const { data, isLoading, isError, error } = usePost(slug);
+
+  const post = data?.post;
+  const author = data?.author;
+
   const { data: bookmarkStatus, isLoading: isBookmarkLoading } =
     useBookmarkStatus(userData?.$id, post?.$id);
 
   const isBookmarked = bookmarkStatus?.isBookmarked || false;
 
   const bookmarkId = bookmarkStatus?.bookmarkId || null;
-  console.log(bookmarkStatus);
-
-  useEffect(() => {
-    setSpinner(true);
-
-    appwriteService
-      .getPost(slug)
-      .then(async (post) => {
-        if (post) {
-          setPost(post);
-          if (post.userId) {
-            const author = await usersService.getUserProfile(post.userId);
-            setAuthor(author);
-          }
-        } else {
-          navigate("/");
-        }
-      })
-      .catch((error) => {
-        handleError(error, "Failed to load post");
-      })
-      .finally(() => {
-        setSpinner(false);
-      });
-  }, [slug, navigate]);
 
   const handleBookmark = () => {
     if (!userData || !post) return;
@@ -150,7 +125,7 @@ function Post() {
   return (
     <div className="relative w-full min-h-screen bg-gray-200 dark:bg-gray-800 py-10">
       {/* Loading Overlay */}
-      {spinner && (
+      {isLoading && (
         <div className="absolute inset-0 z-50 bg-black/20 backdrop-blur-sm flex justify-center items-center cursor-not-allowed">
           <Spinner />
         </div>
