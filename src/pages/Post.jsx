@@ -122,6 +122,32 @@ function Post() {
     setPopup(true);
   };
 
+  if (isError) {
+    return (
+      <div className="w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
+        <Container>
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <p className="text-5xl mb-4">⚠️</p>
+
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+              Failed to load post
+            </h2>
+
+            <p className="text-gray-500 dark:text-gray-400 mb-6 text-sm">
+              {error?.message?.includes("Failed to fetch")
+                ? "No internet connection. Please check your network."
+                : "Unable to load this post. Please try again."}
+            </p>
+
+            <Button onClick={() => navigate("/")} className="cursor-pointer">
+              Go Home
+            </Button>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+
   return (
     <div className="relative w-full min-h-screen bg-gray-200 dark:bg-gray-800 py-10">
       {/* Loading Overlay */}
