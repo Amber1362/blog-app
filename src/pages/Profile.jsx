@@ -150,10 +150,15 @@ function Profile() {
           onConfirm={() => {
             if (deletePostMutation.isPending) return;
             
-            deletePostMutation.mutate(postToDelete);
-            setPopup(false);
-            setPostToDelete(null);
+            deletePostMutation.mutate(postToDelete, {
+              onSuccess: () => {
+                setPopup(false);
+                navigate("/");
+                setPostToDelete(null);
+              },
+            });
           }}
+          isLoading={deletePostMutation.isPending}
           onCancel={() => {
             setPopup(false);
             setPostToDelete(null);

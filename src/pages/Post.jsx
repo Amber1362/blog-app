@@ -7,12 +7,13 @@ import parse from "html-react-parser";
 import Spinner from "../components/Spinner";
 import toast from "react-hot-toast";
 import usersService from "../appwrite/users";
-import bookmarkService from "../appwrite/bookmark";
 import { FaBookmark, FaRegBookmark } from "react-icons/fa";
 import handleError from "../utils/handleError";
 import likeService from "../appwrite/like";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useDeletePost } from "../hooks/useDeletePost";
+import { useBookmarkStatus } from "../hooks/useBookmarkStatus";
+import { useToggleBookmark } from "../hooks/useToggleBookmark";
 
 function Post() {
   const [post, setPost] = useState(null);
@@ -20,8 +21,6 @@ function Post() {
   const [isLoading, setIsLoading] = useState(false);
   const [spinner, setSpinner] = useState(false);
   const [author, setAuthor] = useState(null);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [bookmarkId, setBookmarkId] = useState(null);
 
   const [isLiked, setIsLiked] = useState(false);
   const [likeId, setLikeId] = useState(null);
@@ -29,9 +28,18 @@ function Post() {
 
   const userData = useSelector((state) => state.auth.userData);
   const deletePostMutation = useDeletePost();
+  const toggleBookmarkMutation = useToggleBookmark();
 
   const navigate = useNavigate();
   const { slug } = useParams();
+
+  const { data: bookmarkStatus, isLoading: isBookmarkLoading } =
+    useBookmarkStatus(userData?.$id, post?.$id);
+
+  const isBookmarked = bookmarkStatus?.isBookmarked || false;
+
+  const bookmarkId = bookmarkStatus?.bookmarkId || null;
+  console.log(bookmarkStatus);
 
   useEffect(() => {
     setSpinner(true);
@@ -57,55 +65,15 @@ function Post() {
       });
   }, [slug, navigate]);
 
-  useEffect(() => {
+  const handleBookmark = () => {
     if (!userData || !post) return;
 
-    bookmarkService
-      .checkBookmark(userData.$id, post.$id)
-      .then((bookmark) => {
-        if (bookmark) {
-          setIsBookmarked(true);
-          setBookmarkId(bookmark.$id);
-        } else {
-          setIsBookmarked(false);
-          setBookmarkId(null);
-        }
-      })
-      .catch((error) => {
-        console.log("Bookmark check failed", error);
-      });
-  }, [userData, post]);
-
-  const handleBookmark = () => {
-    if (!isBookmarked) {
-      setIsBookmarked(true);
-      bookmarkService
-        .createBookmark({
-          userId: userData.$id,
-          postId: post.$id,
-        })
-        .then((bookmark) => {
-          // setIsBookmarked(true);
-          setBookmarkId(bookmark.$id);
-          toast.success("Post bookmarked");
-        })
-        .catch((error) => {
-          setIsBookmarked(false);
-          toast.error("Failed to bookmark the post");
-        });
-    } else {
-      setIsBookmarked(false);
-      bookmarkService
-        .deleteBookmark(bookmarkId)
-        .then(() => {
-          setBookmarkId(null);
-          toast.success("Bookmark removed");
-        })
-        .catch((error) => {
-          setIsBookmarked(true);
-          toast.error("Failed to unsave the post");
-        });
-    }
+    toggleBookmarkMutation.mutate({
+      isBookmarked,
+      bookmarkId,
+      userId: userData.$id,
+      postId: post.$id,
+    });
   };
 
   useEffect(() => {
