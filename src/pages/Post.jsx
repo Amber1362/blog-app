@@ -14,16 +14,17 @@ import { useDeletePost } from "../hooks/useDeletePost";
 import { useBookmarkStatus } from "../hooks/useBookmarkStatus";
 import { useToggleBookmark } from "../hooks/useToggleBookmark";
 import { usePost } from "../hooks/usePost";
+import { useLikeStatus } from "../hooks/useLikeStatus";
+import { useToggleLike } from "../hooks/useToggleLike";
+import { usePostLikesCount } from "../hooks/usePostLikesCount";
 
 function Post() {
   const [popup, setPopup] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeId, setLikeId] = useState(null);
-  const [likesCount, setLikesCount] = useState(0);
 
   const userData = useSelector((state) => state.auth.userData);
   const deletePostMutation = useDeletePost();
   const toggleBookmarkMutation = useToggleBookmark();
+  const toggleLikeMutation = useToggleLike();
 
   const navigate = useNavigate();
   const { slug } = useParams();
@@ -51,69 +52,26 @@ function Post() {
     });
   };
 
-  useEffect(() => {
-    if (!post) return;
+  const { data: likesCount = 0 } = usePostLikesCount(post?.$id);
 
-    likeService
-      .getPostLikesCount(post.$id)
-      .then((count) => setLikesCount(count))
-      .catch((error) => {
-        handleError(error, "Failed to display likes count");
-      });
-  }, [post]);
+  const { data: likeStatus, isLoading: isLikeLoading } = useLikeStatus(
+    userData?.$id,
+    post?.$id,
+  );
 
-  useEffect(() => {
-    if (!userData || !post) return;
+  const isLiked = likeStatus?.isLiked || false;
 
-    likeService
-      .checkLike(userData.$id, post.$id)
-      .then((like) => {
-        if (like) {
-          setIsLiked(true);
-          setLikeId(like.$id);
-        } else {
-          setIsLiked(false);
-          setLikeId(null);
-        }
-      })
-      .catch((error) => {
-        console.log("Like check failed", error);
-      });
-  }, [userData, post]);
+  const likeId = likeStatus?.likeId || null;
 
   const handleLike = () => {
-    if (!isLiked) {
-      setIsLiked(true);
-      setLikesCount((prev) => prev + 1);
+    if (!userData || !post) return;
 
-      likeService
-        .addLike({
-          userId: userData.$id,
-          postId: post.$id,
-        })
-        .then((like) => {
-          setLikeId(like.$id);
-          toast.success("Post liked");
-        })
-        .catch((error) => {
-          setIsLiked(false);
-          toast.error("Failed to like the post");
-        });
-    } else {
-      setIsLiked(false);
-      setLikesCount((prev) => prev - 1);
-
-      likeService
-        .removeLike(likeId)
-        .then(() => {
-          setLikeId(null);
-          toast.success("Like removed");
-        })
-        .catch((error) => {
-          setIsLiked(true);
-          toast.error("Failed to unlike the post");
-        });
-    }
+    toggleLikeMutation.mutate({
+      isLiked,
+      likeId,
+      userId: userData.$id,
+      postId: post.$id,
+    });
   };
 
   const isAuthor = post && userData ? post.userId === userData.$id : false;
