@@ -14,6 +14,7 @@ import handleError from "../utils/handleError";
 import { useProfile } from "../hooks/useProfile";
 import { useInfiniteUserPosts } from "../hooks/useInfiniteUserPosts";
 import { useDeletePost } from "../hooks/useDeletePost";
+import { AnimatePresence } from "framer-motion";
 
 function Profile() {
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -144,27 +145,29 @@ function Profile() {
 
   return (
     <div className="w-full min-h-screen py-10 bg-gray-200 dark:bg-gray-800">
-      {popup && (
-        <Popup
-          para="Are you sure you want to delete this post?"
-          onConfirm={() => {
-            if (deletePostMutation.isPending) return;
-            
-            deletePostMutation.mutate(postToDelete, {
-              onSuccess: () => {
-                setPopup(false);
-                navigate("/");
-                setPostToDelete(null);
-              },
-            });
-          }}
-          isLoading={deletePostMutation.isPending}
-          onCancel={() => {
-            setPopup(false);
-            setPostToDelete(null);
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {popup && (
+          <Popup
+            para="Are you sure you want to delete this post?"
+            onConfirm={() => {
+              if (deletePostMutation.isPending) return;
+
+              deletePostMutation.mutate(postToDelete, {
+                onSuccess: () => {
+                  setPopup(false);
+                  navigate("/");
+                  setPostToDelete(null);
+                },
+              });
+            }}
+            isLoading={deletePostMutation.isPending}
+            onCancel={() => {
+              setPopup(false);
+              setPostToDelete(null);
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       <Container>
         {/* Profile Header */}

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Popup } from "../index";
 import toast from "react-hot-toast";
 import handleError from "../../utils/handleError";
+import { AnimatePresence } from "framer-motion";
 
 function LogoutBtn({ className = "" }) {
   const dispatch = useDispatch();
@@ -20,31 +21,33 @@ function LogoutBtn({ className = "" }) {
 
   return (
     <>
-      {popup && (
-        <Popup
-          para="Are you sure you want to logout?"
-          onConfirm={() => {
-            setIsLoading(true);
-            authService
-              .logout()
-              .then(() => {
-                dispatch(logout());
-                toast.success("You are logged out.");
-                navigate("/");
-              })
-              .catch((error) => {
-                handleError(error, 'Failed to logout')
-              })
-              .finally(() => {
-                setIsLoading(false);
-                setPopup(false);
-              });
-          }}
-          onCancel={() => {
-            setPopup(false);
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {popup && (
+          <Popup
+            para="Are you sure you want to logout?"
+            onConfirm={() => {
+              setIsLoading(true);
+              authService
+                .logout()
+                .then(() => {
+                  dispatch(logout());
+                  toast.success("You are logged out.");
+                  navigate("/");
+                })
+                .catch((error) => {
+                  handleError(error, "Failed to logout");
+                })
+                .finally(() => {
+                  setIsLoading(false);
+                  setPopup(false);
+                });
+            }}
+            onCancel={() => {
+              setPopup(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       {isLoading && (
         <div className="z-50 cursor-not-allowed fixed inset-0 bg-black/30 flex justify-center items-center">

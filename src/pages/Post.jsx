@@ -17,6 +17,7 @@ import { usePost } from "../hooks/usePost";
 import { useLikeStatus } from "../hooks/useLikeStatus";
 import { useToggleLike } from "../hooks/useToggleLike";
 import { usePostLikesCount } from "../hooks/usePostLikesCount";
+import { AnimatePresence } from "framer-motion";
 
 function Post() {
   const [popup, setPopup] = useState(false);
@@ -116,27 +117,29 @@ function Post() {
       )}
 
       {/* Delete Confirmation Popup */}
-      {popup && (
-        <Popup
-          para="Are you sure you want to delete this post?"
-          onConfirm={() => {
-            if (deletePostMutation.isPending) return;
+      <AnimatePresence>
+        {popup && (
+          <Popup
+            para="Are you sure you want to delete this post?"
+            onConfirm={() => {
+              if (deletePostMutation.isPending) return;
 
-            deletePostMutation.mutate(post, {
-              onSuccess: () => {
-                setPopup(false);
-                navigate("/");
-              },
-            });
-          }}
-          isLoading={deletePostMutation.isPending}
-          onCancel={() => {
-            if (deletePostMutation.isPending) return;
+              deletePostMutation.mutate(post, {
+                onSuccess: () => {
+                  setPopup(false);
+                  navigate("/");
+                },
+              });
+            }}
+            isLoading={deletePostMutation.isPending}
+            onCancel={() => {
+              if (deletePostMutation.isPending) return;
 
-            setPopup(false);
-          }}
-        />
-      )}
+              setPopup(false);
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       {post && (
         <Container>
