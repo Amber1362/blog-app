@@ -50,7 +50,7 @@ export class AuthService {
     try {
       return await this.account.get();
     } catch (error) {
-      return null;
+      throw error;
     }
   }
 

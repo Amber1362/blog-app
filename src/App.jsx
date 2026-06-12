@@ -22,12 +22,7 @@ function App() {
     authService
       .getCurrentUser()
       .then((userData) => {
-        if (!userData) {
-          dispatch(logout());
-          return;
-        }
-
-        return usersService
+         return usersService
           .getUserProfile(userData.$id)
           .then(async (profile) => {
             if (!profile) {
@@ -58,6 +53,14 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
+
+        if (error.message?.includes("Failed to fetch") || !navigator.onLine) {
+          return;
+        }
+
+        if (error.code === 401) {
+          dispatch(logout());
+        }
       })
       .finally(() => {
         dispatch(setLoading(false));
