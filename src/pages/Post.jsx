@@ -18,6 +18,7 @@ import { useLikeStatus } from "../hooks/useLikeStatus";
 import { useToggleLike } from "../hooks/useToggleLike";
 import { usePostLikesCount } from "../hooks/usePostLikesCount";
 import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 function Post() {
   const [popup, setPopup] = useState(false);
@@ -142,98 +143,107 @@ function Post() {
       </AnimatePresence>
 
       {post && (
-        <Container>
-          {/* Featured Image */}
-          <div className="relative bg-white dark:bg-gray-600 dark:border-gray-600 rounded-2xl shadow-md p-4 mb-6">
-            <img
-              src={appwriteService.getFilePreview(post.featuredImage)}
-              alt={post.title}
-              className="mx-auto max-h-[500px] object-cover rounded-xl"
-            />
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.5,
+            ease: "easeOut",
+          }}
+        >
+          <Container>
+            {/* Featured Image */}
+            <div className="relative bg-white dark:bg-gray-600 dark:border-gray-600 rounded-2xl shadow-md p-4 mb-6">
+              <img
+                src={appwriteService.getFilePreview(post.featuredImage)}
+                alt={post.title}
+                className="mx-auto max-h-[500px] object-cover rounded-xl"
+              />
 
-            {isAuthor && (
-              <div className="absolute top-3 right-3 sm:top-8 sm:right-8 flex gap-2 sm:gap-3">
-                <Link
-                  to={`/edit-post/${post.$id}`}
-                  onClick={(e) => {
-                    if (!navigator.onLine) {
-                      e.preventDefault();
-                      toast.error(
-                        "Network error. Please check your internet connection.",
-                      );
-                    }
-                  }}
-                >
-                  <Button
-                    bgColor="bg-green-500"
-                    className="hover:bg-green-600 cursor-pointer text-sm sm:text-base px-3 sm:px-4"
+              {isAuthor && (
+                <div className="absolute top-3 right-3 sm:top-8 sm:right-8 flex gap-2 sm:gap-3">
+                  <Link
+                    to={`/edit-post/${post.$id}`}
+                    onClick={(e) => {
+                      if (!navigator.onLine) {
+                        e.preventDefault();
+                        toast.error(
+                          "Network error. Please check your internet connection.",
+                        );
+                      }
+                    }}
                   >
-                    Edit
+                    <Button
+                      bgColor="bg-green-500"
+                      className="hover:bg-green-600 cursor-pointer text-sm sm:text-base px-3 sm:px-4"
+                    >
+                      Edit
+                    </Button>
+                  </Link>
+
+                  <Button
+                    isLoading={deletePostMutation.isPending}
+                    bgColor="bg-red-500"
+                    className="hover:bg-red-600 cursor-pointer text-sm sm:text-base px-3 sm:px-4"
+                    onClick={deletePost}
+                  >
+                    Delete
                   </Button>
-                </Link>
+                </div>
+              )}
+            </div>
 
-                <Button
-                  isLoading={deletePostMutation.isPending}
-                  bgColor="bg-red-500"
-                  className="hover:bg-red-600 cursor-pointer text-sm sm:text-base px-3 sm:px-4"
-                  onClick={deletePost}
+            {/* Title + Date */}
+            <div className="mb-6">
+              <h1 className="text-3xl font-bold dark:text-gray-200 text-gray-800 mb-2">
+                {post.title}
+              </h1>
+
+              {/* Author */}
+              {author && (
+                <span
+                  onClick={() => navigate(`/profile/${author.username}`)}
+                  className="text-sm text-indigo-500 dark:text-indigo-400 font-medium hover:underline cursor-pointer"
                 >
-                  Delete
-                </Button>
-              </div>
-            )}
-          </div>
+                  @{author.username}
+                </span>
+              )}
 
-          {/* Title + Date */}
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold dark:text-gray-200 text-gray-800 mb-2">
-              {post.title}
-            </h1>
+              <PostDate
+                className="text-sm text-gray-500 dark:text-gray-400 font-medium"
+                dateString={post.$createdAt}
+              />
+            </div>
 
-            {/* Author */}
-            {author && (
-              <span
-                onClick={() => navigate(`/profile/${author.username}`)}
-                className="text-sm text-indigo-500 dark:text-indigo-400 font-medium hover:underline cursor-pointer"
+            <div className="flex items-center gap-4 mt-2 mb-2">
+              {/* Like Button */}
+              <button
+                onClick={handleLike}
+                className="text-2xl text-red-500 hover:scale-110 transition"
               >
-                @{author.username}
-              </span>
-            )}
+                {isLiked ? <FaHeart /> : <FaRegHeart />}
+              </button>
+              <div className="text-sm text-gray-600 dark:text-gray-300">
+                {likesCount} likes
+              </div>
 
-            <PostDate
-              className="text-sm text-gray-500 dark:text-gray-400 font-medium"
-              dateString={post.$createdAt}
-            />
-          </div>
-
-          <div className="flex items-center gap-4 mt-2 mb-2">
-            {/* Like Button */}
-            <button
-              onClick={handleLike}
-              className="text-2xl text-red-500 hover:scale-110 transition"
-            >
-              {isLiked ? <FaHeart /> : <FaRegHeart />}
-            </button>
-            <div className="text-sm text-gray-600 dark:text-gray-300">
-              {likesCount} likes
+              {/* Bookmark Button */}
+              <button
+                onClick={handleBookmark}
+                className="text-2xl text-indigo-500 hover:scale-110 transition"
+              >
+                {isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
+              </button>
             </div>
 
-            {/* Bookmark Button */}
-            <button
-              onClick={handleBookmark}
-              className="text-2xl text-indigo-500 hover:scale-110 transition"
-            >
-              {isBookmarked ? <FaBookmark /> : <FaRegBookmark />}
-            </button>
-          </div>
-
-          {/* Content */}
-          <div className="bg-white dark:bg-gray-600 rounded-2xl shadow-md p-4 sm:p-8">
-            <div className="browser-css text-gray-700 dark:text-gray-200 leading-8">
-              {parse(post.content)}
+            {/* Content */}
+            <div className="bg-white dark:bg-gray-600 rounded-2xl shadow-md p-4 sm:p-8">
+              <div className="browser-css text-gray-700 dark:text-gray-200 leading-8">
+                {parse(post.content)}
+              </div>
             </div>
-          </div>
-        </Container>
+          </Container>
+        </motion.div>
       )}
     </div>
   );

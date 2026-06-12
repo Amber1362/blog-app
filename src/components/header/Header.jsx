@@ -17,6 +17,7 @@ import {
 } from "react-icons/fa";
 import appwriteService from "../../appwrite/config";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaChevronDown } from "react-icons/fa";
 
 function Header() {
   const authStatus = useSelector((state) => state.auth.status);
@@ -109,7 +110,7 @@ function Header() {
                     }}
                     className="text-gray-400 text-xs"
                   >
-                    ▼
+                    <FaChevronDown />
                   </motion.span>
                 </button>
 

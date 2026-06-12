@@ -171,7 +171,15 @@ function Profile() {
 
       <Container>
         {/* Profile Header */}
-        <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-8 mb-8">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.5,
+            ease: "easeOut",
+          }}
+          className="bg-white dark:bg-gray-700 rounded-2xl shadow-md p-8 mb-8"
+        >
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="w-24 h-24 rounded-full bg-indigo-100 dark:bg-gray-600 flex justify-center items-center shrink-0 overflow-hidden">
               {profileData?.profilePhoto ? (
@@ -253,7 +261,7 @@ function Profile() {
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* User Posts */}
         <div>
