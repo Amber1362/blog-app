@@ -10,7 +10,12 @@ import toast from "react-hot-toast";
 import handleError from "../../utils/handleError";
 import RTESkeleton from "../RTESkeleton";
 
-const RTE = lazy(() => import("../RTE"));
+// const RTE = lazy(() => import("../RTE"));
+
+const RTE = lazy(
+  () =>
+    new Promise((resolve) => setTimeout(() => resolve(import("../RTE")), 3000)),
+);
 
 function PostForm({ post }) {
   const [isLoading, setIsLoading] = useState(false);
