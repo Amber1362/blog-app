@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, lazy, Suspense } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Input, Select, RTE } from "../index";
+import { Button, Input, Select } from "../index";
 import appwriteService from "../../appwrite/config";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -8,6 +8,9 @@ import Spinner from "../Spinner";
 import AiChatBox from "../gemini/AiChatBox";
 import toast from "react-hot-toast";
 import handleError from "../../utils/handleError";
+import RTESkeleton from "../RTESkeleton";
+
+const RTE = lazy(() => import("../RTE"));
 
 function PostForm({ post }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -164,12 +167,14 @@ function PostForm({ post }) {
             )}
           </div>
 
-          <RTE
-            label="Content :"
-            name="content"
-            control={control}
-            defaultValue={getValues("content")}
-          />
+          <Suspense fallback={<RTESkeleton />}>
+            <RTE
+              label="Content :"
+              name="content"
+              control={control}
+              defaultValue={getValues("content")}
+            />
+          </Suspense>
         </div>
 
         <div className="w-full md:w-1/3 px-2 mt-4 md:mt-0">
