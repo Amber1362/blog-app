@@ -15,7 +15,7 @@ export class DatabaseService {
          this.storage = new Storage(this.client);
     }
 
-    async createPost({title, slug, content, featuredImage, status, userId, username}) {
+    async createPost({title, slug, content, featuredImage, status, userId, }) {
         try {
             return await this.database.createDocument(
                 conf.appwriteDatabaseId,
@@ -27,7 +27,7 @@ export class DatabaseService {
                     featuredImage,
                     status,
                     userId,
-                    username
+                    
                 }
             )
         } catch (error) {
@@ -51,6 +51,7 @@ export class DatabaseService {
             )
         } catch (error) {
             console.log('Appwrite service :: createPost :: error', error)
+            throw error
         }
     }
 
@@ -116,6 +117,7 @@ export class DatabaseService {
             return true;
         } catch (error) {
              console.log('Appwrite service :: createPost :: error', error)
+             throw error
             return false;
         }
     }

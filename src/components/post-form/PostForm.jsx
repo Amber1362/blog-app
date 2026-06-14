@@ -9,13 +9,10 @@ import AiChatBox from "../gemini/AiChatBox";
 import toast from "react-hot-toast";
 import handleError from "../../utils/handleError";
 import RTESkeleton from "../RTESkeleton";
+import { useCreatePost } from "../../hooks/useCreatePostMutation";
+import { useUpdatePost } from "../../hooks/useUpdatePostMutation";
 
-// const RTE = lazy(() => import("../RTE"));
-
-const RTE = lazy(
-  () =>
-    new Promise((resolve) => setTimeout(() => resolve(import("../RTE")), 3000)),
-);
+const RTE = lazy(() => import("../RTE"));
 
 function PostForm({ post }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -40,65 +37,37 @@ function PostForm({ post }) {
     },
   });
 
+  const createPostMutation = useCreatePost();
+  const updatePostMutation = useUpdatePost();
+
   const submit = async (data) => {
-    setIsLoading(true);
-    try {
-      if (post) {
-        const file = data.image[0]
-          ? await appwriteService.uploadFile(data.image[0])
-          : null;
-
-        if (file) {
-          appwriteService.deleteFile(post.featuredImage);
-        }
-
-        const dbPost = await appwriteService.updatePost(post.$id, {
-          ...data,
-          featuredImage: file ? file.$id : undefined,
-        });
-
-        if (dbPost) {
-          toast.success("Post updated successfully!");
-          setIsLoading(false);
-          navigate(`/post/${dbPost.$id}`);
-        } else {
-          toast.error("Failed to update post");
-          return;
-        }
-      } else {
-        setIsLoading(true);
-        const file = await appwriteService.uploadFile(data.image[0]);
-
-        if (file) {
-          const fileId = file.$id;
-          data.featuredImage = fileId;
-          const dbPost = await appwriteService.createPost({
-            ...data,
-            userId: userData.$id,
-          });
-
-          if (dbPost) {
-            toast.success("Post uploaded successfully!");
-            setIsLoading(false);
-            navigate(`/post/${dbPost.$id}`);
-          } else {
-            toast.error("Failed to create post");
-            return;
-          }
-        }
-      }
-    } catch (error) {
-      if (error.message.includes("already exists")) {
-        toast.error("This slug is already taken. Please use a different one.");
-        return;
-      }
-      handleError(
-        error,
-        post ? "Failed to update post" : "Failed to create post",
+    if (post) {
+      updatePostMutation.mutate(
+        {
+          post,
+          data,
+        },
+        {
+          onSuccess: (updatedPost) => {
+            navigate(`/post/${updatedPost.$id}`);
+          },
+        },
       );
-    } finally {
-      setIsLoading(false);
+
+      return;
     }
+
+    createPostMutation.mutate(
+      {
+        data,
+        userId: userData.$id,
+      },
+      {
+        onSuccess: (createdPost) => {
+          navigate(`/post/${createdPost.post.$id}`);
+        },
+      },
+    );
   };
 
   const slugTransform = useCallback((value) => {
