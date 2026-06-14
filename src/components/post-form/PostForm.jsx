@@ -41,6 +41,13 @@ function PostForm({ post }) {
   const updatePostMutation = useUpdatePost();
 
   const submit = async (data) => {
+    if (!navigator.onLine) {
+      toast.error("No internet connection", {
+        id: 'submit-network-error'
+      });
+      return;
+    }
+
     if (post) {
       updatePostMutation.mutate(
         {
@@ -203,7 +210,7 @@ function PostForm({ post }) {
             {...register("status", { required: true })}
           />
           <Button
-            isLoading={isLoading}
+            isLoading={createPostMutation.isPending || updatePostMutation.isPending}
             type="submit"
             bgColor={post ? "bg-green-500" : "bg-blue-500"}
             className="w-full cursor-pointer hover:bg-indigo-700 flex items-center justify-center bg-indigo-600 shadow-sm"

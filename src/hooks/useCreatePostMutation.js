@@ -45,11 +45,15 @@ export const useCreatePost = () => {
 
     onError: (error) => {
       if (error.message.includes("already exists")) {
-        toast.error("This slug is already taken. Please use a different one.");
+        toast.error("This slug is already taken. Please use a different one.", {
+            id: 'slug-already-exists'
+        });
         return;
       }
 
-      toast.error(error.message || "Failed to create post");
+      toast.error(error.message || "Failed to create post", {
+        id: 'create-post-error'
+      });
     },
   });
 };

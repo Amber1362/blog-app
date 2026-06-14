@@ -7,7 +7,6 @@ export const useUpdatePost = () => {
 
   return useMutation({
     mutationFn: async ({ post, data }) => {
-        console.log("UPDATE MUTATION INPUT:", { post, data });
       const file = data.image?.[0]
         ? await appwriteService.uploadFile(data.image[0])
         : null;
