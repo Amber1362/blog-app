@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -22,18 +22,31 @@ function ProfileSetup({ profileDetails }) {
       bio: profileDetails?.bio || "",
     },
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
   const dispatch = useDispatch();
 
+  const [previewImage, setPreviewImage] = useState(
+    profileDetails?.profilePhoto
+      ? appwriteService.getFilePreview(profileDetails.profilePhoto)
+      : null,
+  );
+
   const imageFile = watch("image");
 
-  const previewImage = imageFile?.[0]
-    ? URL.createObjectURL(imageFile[0])
-    : profileDetails?.profilePhoto
-      ? appwriteService.getFilePreview(profileDetails.profilePhoto)
-      : null;
+  useEffect(() => {
+    if (!imageFile?.[0]) return;
+
+    const objectUrl = URL.createObjectURL(imageFile[0]);
+
+    setPreviewImage(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [imageFile]);
 
   const bioValue = watch("bio", "");
 
@@ -84,7 +97,7 @@ function ProfileSetup({ profileDetails }) {
         if (file) {
           const fileId = file.$id;
           data.profilePhoto = fileId;
-        } 
+        }
 
         const profile = await usersService.getUserProfile(userData.$id);
 
@@ -118,7 +131,7 @@ function ProfileSetup({ profileDetails }) {
         );
       }
     } catch (error) {
-      handleError(error, 'Failed to complete profile setup')
+      handleError(error, "Failed to complete profile setup");
     } finally {
       setIsLoading(false);
     }
@@ -153,10 +166,10 @@ function ProfileSetup({ profileDetails }) {
                     <div className="relative w-32 h-32">
                       {/* Profile Image */}
                       <div className="w-full h-full rounded-full overflow-hidden border-4 border-indigo-500 shadow-lg bg-indigo-100 dark:bg-gray-600 flex items-center justify-center">
-                        {profileDetails?.profilePhoto ? (
+                        {previewImage ? (
                           <img
                             src={previewImage}
-                            alt={profileDetails.username}
+                            alt="Profile Preview"
                             className="w-full h-full object-cover"
                           />
                         ) : (
