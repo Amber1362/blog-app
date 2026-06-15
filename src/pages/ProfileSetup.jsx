@@ -11,6 +11,10 @@ import { FaPenToSquare } from "react-icons/fa6";
 import handleError from "../utils/handleError";
 
 function ProfileSetup({ profileDetails }) {
+  useEffect(() => {
+  console.log("ProfileSetup mounted");
+  console.log("Current path:", window.location.pathname);
+}, []);
   const {
     register,
     handleSubmit,

@@ -39,6 +39,7 @@ function Signup() {
                 $id: userData.$id,
                 name: userData.name,
                 email: userData.email,
+                profileComplete: false,
               },
             }),
           );
@@ -47,7 +48,9 @@ function Signup() {
             userId: userData.$id,
             name: userData.name,
           });
+
           toast.success("Account created successfully!");
+
           navigate("/profile-setup");
         }
       }

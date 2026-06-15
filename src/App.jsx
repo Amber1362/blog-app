@@ -32,6 +32,12 @@ function App() {
                 name: userData.name,
               });
             }
+
+            if (!profile?.profileComplete) {
+              navigate("/profile-setup");
+              return;
+            }
+
             dispatch(
               login({
                 userData: {
@@ -45,10 +51,6 @@ function App() {
                 },
               }),
             );
-            if (!profile?.profileComplete) {
-              navigate("/profile-setup");
-              return;
-            }
           });
       })
       .catch((error) => {

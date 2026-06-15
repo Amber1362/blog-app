@@ -8,17 +8,21 @@ export default function Protected({ children, authentication = true }) {
 
   const navigate = useNavigate();
 
+  const userData = useSelector((state) => state.auth.userData);
+
   useEffect(() => {
-    if (loading) return
-  
+    if (loading) return;
+
     if (authentication && !authStatus) {
       navigate("/login");
-    } else if (!authentication && authStatus) {
+    }
+
+    if (!authentication && authStatus && userData?.profileComplete) {
       navigate("/");
     }
-  }, [authStatus, navigate, authentication, loading]);
+  }, [authStatus, authentication, loading, userData]);
 
-  if(loading) return null
-  
+  if (loading) return null;
+
   return <>{children}</>;
 }
